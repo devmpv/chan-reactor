@@ -7,18 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Thread {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+public class Thread extends Message {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "thread")
 	private Set<Message> messages;
@@ -30,8 +23,12 @@ public class Thread {
 	public Thread() {
 	}
 
-	public Thread(BoardEnum board) {
+	public Thread(BoardEnum board, String title, String text) {
 		this.board = board;
+		setThread(null);
+		setTitle(title);
+		setText(text);
+		setTimestamp(System.currentTimeMillis());
 	}
 
 	public BoardEnum getBoard() {

@@ -22,7 +22,7 @@ public class Message {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "thread_id", nullable = false)
+	@JoinColumn(name = "thread_id", nullable = true)
 	private Thread thread;
 
 	private String title;

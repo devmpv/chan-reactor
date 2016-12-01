@@ -20,6 +20,10 @@ public class DatabaseLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... strings) throws Exception {
-		this.repository.save(new Thread(BoardEnum.b));
+		this.repository.save(new Thread(BoardEnum.b, "thread 1", "Hello everybody. Here is my first thread"));
+		this.repository.save(new Thread(BoardEnum.b, "thread 2", "Hello everybody. Here is my second thread"));
+		this.repository.save(new Thread(BoardEnum.po, "thread 1", "Hello everybody. Here is my first /po thread"));
+		this.repository.save(new Thread(BoardEnum.po, "thread 2", "Hello everybody. Here is my second /po thread"));
+		this.repository.save(new Thread(BoardEnum.po, "thread 3", "Hello everybody. Here is my third /po thread"));
 	}
 }
