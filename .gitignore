@@ -1,8 +1,10 @@
+# IDE generated files
 *.class
 .project
 .classpath
 .settings
 .idea
+*.iml
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
