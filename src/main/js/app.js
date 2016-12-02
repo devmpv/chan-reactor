@@ -1,10 +1,10 @@
 'use strict';
 
-import ThreadList from './Components/ThreadList';
+import ThreadList from './components/ThreadList';
 
 // tag::vars[]
 const React = require('react');
-const ReactDOM = require('react-dom')
+const ReactDOM = require('react-dom');
 const client = require('./client');
 // end::vars[]
 
@@ -34,5 +34,5 @@ class App extends React.Component {
 ReactDOM.render(
 	<App />,
 	document.getElementById('react')
-)
+);
 // end::render[]
