@@ -11,6 +11,7 @@ class CreateDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = { modalActive: false };
     }
 
     handleSubmit(e) {
@@ -36,17 +37,13 @@ class CreateDialog extends React.Component {
                 <input type="text" placeholder={attribute} ref={attribute} className="field" />
             </p>
         );
-
         return (
             <div>
                 <a href="#createThread">Create</a>
-
                 <div id="createThread" className="modalDialog">
                     <div>
                         <a href="#" title="Close" className="close">X</a>
-
                         <h2>Create new thread</h2>
-
                         <form>
                             {inputs}
                             <button onClick={this.handleSubmit}>Create</button>
@@ -56,7 +53,6 @@ class CreateDialog extends React.Component {
             </div>
         )
     }
-
 }
 // end::create-dialog[]
 

@@ -21,6 +21,7 @@ public class Thread extends Message {
 	private BoardEnum board;
 
 	public Thread() {
+        setTimestamp(System.currentTimeMillis());
 	}
 
 	public Thread(BoardEnum board, String title, String text) {

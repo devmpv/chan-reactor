@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface MessageRepository extends PagingAndSortingRepository<Message, Serializable> {
+public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
 
 	List<Message> findByThread(Thread thread, Pageable pageble);
 

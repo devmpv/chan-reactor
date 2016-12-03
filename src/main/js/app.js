@@ -38,7 +38,7 @@ class App extends React.Component {
 		}).done(threadCollection => {
 			this.setState({
 				threads: threadCollection.entity._embedded.threads,
-				attributes: Object.keys(this.schema.properties),
+				attributes: ['title', 'text', 'board'],//Object.keys(this.schema.properties),
 				pageSize: pageSize,
 				links: threadCollection.entity._links});
 		});
