@@ -1,5 +1,7 @@
 'use strict';
 
+import MessageHeader from './MessageHeader';
+
 // tag::vars[]
 const React = require('react');
 // end::vars[]
@@ -17,17 +19,16 @@ class Thread extends React.Component {
     }
 
     render() {
+        let thread = this.props.thread;
         return (
-			<tr>
-				<td><a href={this.props.thread._links.self.href}>link</a></td>
-				<td>{this.props.thread.board}</td>
-				<td>{this.props.thread.title}</td>
-				<td>{this.props.thread.text}</td>
-				<td>{this.props.thread.timestamp}</td>
-				<td>
-					<button onClick={this.handleDelete}>Delete</button>
-				</td>
-			</tr>
+            <div className="threadPreview">
+                <table>
+                    <MessageHeader thread={thread} onDelete={this.props.onDelete}/>
+                    <tr>
+                        <td><blockquote>{thread.text}</blockquote></td>
+                    </tr>
+                </table>
+            </div>
         )
     }
 }

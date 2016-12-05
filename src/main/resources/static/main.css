@@ -6,10 +6,25 @@ table {
     border-collapse: collapse;
 }
 
-td, th {
+th {
     border: 1px solid #999;
-    padding: 0.5rem;
+    text-align: center;
+}
+
+td {
+    border: 1px solid #999;
+    padding-top: 0.0rem;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    padding-bottom: 0.0rem;
     text-align: left;
+}
+
+/*Various classes*/
+
+.threadPreview {
+    padding-top: 0.0rem;
+    padding-bottom: 0.3rem;
 }
 
 /*Classes for creating dialogs*/
