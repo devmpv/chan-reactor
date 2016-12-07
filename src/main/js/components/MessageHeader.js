@@ -17,16 +17,20 @@ class MessageHeader extends React.Component {
 	}
 
 	render() {
+        let date = (new Date(this.props.thread.timestamp)).toLocaleString();
 		return (
-			<th>
-				<td><a href={this.props.thread._links.self.href}>link</a></td>
-				<td>{this.props.thread.board}</td>
-				<td>{this.props.thread.title}</td>
-				<td>{this.props.thread.timestamp}</td>
-				<td>
-					<button onClick={this.handleDelete}>Hide</button>
-				</td>
-			</th>
+			<div className="message-header">
+				<span><input type="checkbox" name="delete"/></span>
+				<span className="message-title">{this.props.thread.title}</span>
+				<span>Anonymous</span>
+				<span>{date}</span>
+				<span>
+					<button onClick={this.handleDelete}>Delete</button>
+				</span>
+				<span>
+					<button>Hide</button>
+				</span>
+			</div>
 		)
 	}
 }

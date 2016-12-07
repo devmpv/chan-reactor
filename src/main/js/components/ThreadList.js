@@ -1,6 +1,6 @@
 'use strict';
 
-import Thread from './Thread';
+import ThreadPreview from './ThreadPreview';
 
 // tag::vars[]
 const React = require('react');
@@ -56,7 +56,7 @@ class ThreadList extends React.Component {
 	// tag::thread-list-render[]
 	render() {
 		let threads = this.props.threads.map(thread =>
-			<Thread key={thread._links.self.href} thread={thread} onDelete={this.props.onDelete}/>
+			<ThreadPreview key={thread._links.self.href} thread={thread} onDelete={this.props.onDelete}/>
 		);
 
 		let navLinks = [];
@@ -77,7 +77,7 @@ class ThreadList extends React.Component {
 			<div>
 				<input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
 				<div>
-					<h3>Thread List!!!!!!!!!</h3>
+					<h3>Thread List!!</h3>
 				</div>
 				{threads}
 				<div>

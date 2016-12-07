@@ -1,31 +1,44 @@
-input.field {
-    width: 90%;
-}
+html,body{background-color:#EEEEEE;color:#333333;font-family: Verdana,sans-serif;font-size:1em;}
+body { margin: 0; padding: 8px; margin-bottom: auto;font-size:0.9em; }
+html {	overflow-y: scroll; }
+* {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box; }
+blockquote blockquote { display: block; max-height: 1200px; overflow: auto;}
+/*form, .data { margin-bottom: 0px; font-size:0.9em; }*/
+table {  border-collapse: separate; border-spacing: 2px; border-style:none;}
+table td{border-style:none;}
+img.fullsize, video { max-width: 100%; height: auto; }
+fieldset {padding: 0;}
+form textarea { display: block; }
+hr {clear: both; border: none;border-top: 1px solid #DDD;height: 0;}
+sub {vertical-align: sub;font-size: smaller;}
+sup {vertical-align: super;	font-size: smaller;}
+blockquote{display:block;margin: 1em 35px;}
+td, td img {vertical-align: top;}
 
-table {
-    border-collapse: collapse;
-}
-
-th {
-    border: 1px solid #999;
-    text-align: center;
-}
-
-td {
-    border: 1px solid #999;
-    padding-top: 0.0rem;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-    padding-bottom: 0.0rem;
-    text-align: left;
-}
-
+span {padding: 8px}
 /*Various classes*/
 
-.threadPreview {
+.panel {
     padding-top: 0.0rem;
     padding-bottom: 0.3rem;
 }
+.message {	padding: 1px 3px 3px;margin: 0;}
+.message .message-header {margin-bottom: 2px;}
+.message .message-title{background:inherit;font-size:1em;	color:#002244;font-weight:bold;}
+.message .image { margin: 0 17px;}
+.message .images-multi .image {display: inline-block;}
+.message .images-single + blockquote {margin: 0 35px 15px;}
+.message .images .nsfw {opacity:0.05}
+.message .images .nsfw:hover {opacity:1}
+.message .images .image-link a {float: left;margin: 0 15px 0 0;}
+.message .images-single-exp {display: table;}
+.message .file-attr {text-decoration:none;	color:#666666;	font-size:.8em;}
+.message .file-attr .filesize {display: block;	font-size: 0.9em;}
+.message .file-attr .file-notice {font-size: 0.9em; font-style: italic; margin-left: 10px;}
+.message .webm-file {	border: 1px dashed #818181;}
+.message .close-webm {padding-left: 3px;}
+.message .message-text {overflow: auto;}
+.message.reply .message-text {  max-height: 600px;}
 
 /*Classes for creating dialogs*/
 
