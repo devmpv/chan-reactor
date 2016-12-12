@@ -8,13 +8,19 @@ const ReactDOM = require('react-dom');
 const client = require('./client');
 
 const follow = require('./follow'); // function to hop multiple links by "rel"
+const Router = require('react-router').Router;
+const Route = require('react-router').Route;
+const Link = require('react-router').Link;
+const browserHistory = require('react-router').browserHistory;
 
 const root = '/api';
+let boardRoot = root;
 
 class App extends React.Component {
 
 	constructor(props) {
 		super(props);
+		boardRoot=boardRoot.concat('/threads/search/board');
 		this.state = {threads: [], attributes: [], pageSize: 20, links: {}};
 		this.updatePageSize = this.updatePageSize.bind(this);
 		this.onCreate = this.onCreate.bind(this);
@@ -24,8 +30,10 @@ class App extends React.Component {
 
 	// tag::follow-2[]
 	loadFromServer(pageSize) {
-		follow(client, root, [
-			{rel: 'threads', params: {size: pageSize}}]
+		/*follow(client, boardRoot, [
+			{rel: '', params: {
+				size: pageSize
+			}}]
 		).then(threadCollection => {
 			return client({
 				method: 'GET',
@@ -35,10 +43,19 @@ class App extends React.Component {
 				this.schema = schema.entity;
 				return threadCollection;
 			});
-		}).done(threadCollection => {
+		})*/
+        client({method: 'GET', path: boardRoot, params: {
+            	size: pageSize,
+            	uri: 'boards/'.concat(this.props.params.boardName)
+			}})
+			.done(threadCollection => {
+            let threads = threadCollection.entity._embedded.threads;
+			/*threads.sort(function (a,b) {
+				return b.updated - a.updated;
+            });*/
 			this.setState({
-				threads: threadCollection.entity._embedded.threads,
-				attributes: ['title', 'text', 'board'],//Object.keys(this.schema.properties),
+				threads: threads,
+				attributes: ['title', 'text'],
 				pageSize: pageSize,
 				links: threadCollection.entity._links});
 		});
@@ -101,7 +118,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
+				<CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName} onCreate={this.onCreate}/>
 				<ThreadList threads={this.state.threads}
 							  links={this.state.links}
 							  pageSize={this.state.pageSize}
@@ -114,6 +131,8 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-	<App />,
+	<Router history={browserHistory}>
+		<Route path="/:boardName" component={App}/>
+	</Router>,
 	document.getElementById('react')
 );

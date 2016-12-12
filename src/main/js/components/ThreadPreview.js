@@ -11,12 +11,12 @@ class ThreadPreview extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleDelete = this.handleDelete.bind(this);
+       // this.handleDelete = this.handleDelete.bind(this);
     }
 
-    handleDelete() {
+    /*handleDelete() {
         this.props.onDelete(this.props.thread);
-    }
+    }*/
 
     render() {
         let thread = this.props.thread;

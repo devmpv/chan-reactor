@@ -11,16 +11,16 @@ class CreateDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.state = { modalActive: false };
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        let newEmployee = {};
+        let newThread = {};
         this.props.attributes.forEach(attribute => {
-            newEmployee[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+            newThread[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
-        this.props.onCreate(newEmployee);
+        newThread['board']='boards/'.concat(this.props.boardName);
+        this.props.onCreate(newThread);
 
         // clear out the dialog's inputs
         this.props.attributes.forEach(attribute => {
