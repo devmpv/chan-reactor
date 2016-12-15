@@ -2,6 +2,7 @@
 
 import CreateDialog from './components/CreateDialog';
 import ThreadList from './components/ThreadList';
+import BoardList from './components/BoardList';
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -30,29 +31,12 @@ class App extends React.Component {
 
 	// tag::follow-2[]
 	loadFromServer(pageSize) {
-		/*follow(client, boardRoot, [
-			{rel: '', params: {
-				size: pageSize
-			}}]
-		).then(threadCollection => {
-			return client({
-				method: 'GET',
-				path: threadCollection.entity._links.profile.href,
-				headers: {'Accept': 'application/schema+json'}
-			}).then(schema => {
-				this.schema = schema.entity;
-				return threadCollection;
-			});
-		})*/
         client({method: 'GET', path: boardRoot, params: {
             	size: pageSize,
             	uri: 'boards/'.concat(this.props.params.boardName)
 			}})
 			.done(threadCollection => {
             let threads = threadCollection.entity._embedded.threads;
-			/*threads.sort(function (a,b) {
-				return b.updated - a.updated;
-            });*/
 			this.setState({
 				threads: threads,
 				attributes: ['title', 'text'],
@@ -71,11 +55,11 @@ class App extends React.Component {
 				entity: newThread,
 				headers: {'Content-Type': 'application/json'}
 			})
-		}).then(response => {
+		})/*.then(response => {
 			return follow(client, root, [
 				{rel: 'threads', params: {'size': this.state.pageSize}}]);
-		}).done(response => {
-			this.onNavigate(response.entity._links.last.href);
+		})*/.done(response => {
+            this.loadFromServer(this.state.pageSize);
 		});
 	}
 	// end::create[]
@@ -133,6 +117,7 @@ class App extends React.Component {
 ReactDOM.render(
 	<Router history={browserHistory}>
 		<Route path="/:boardName" component={App}/>
+		<Route path="/" component={BoardList}/>
 	</Router>,
 	document.getElementById('react')
 );
