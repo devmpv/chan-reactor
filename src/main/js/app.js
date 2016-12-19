@@ -1,8 +1,8 @@
 'use strict';
 
-import CreateDialog from './components/CreateDialog';
-import ThreadList from './components/ThreadList';
-import BoardList from './components/BoardList';
+import CreateDialog from "./components/CreateDialog";
+import ThreadList from "./components/ThreadList";
+import BoardList from "./components/BoardList";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -11,7 +11,7 @@ const client = require('./client');
 const follow = require('./follow'); // function to hop multiple links by "rel"
 const Router = require('react-router').Router;
 const Route = require('react-router').Route;
-const Link = require('react-router').Link;
+//const Link = require('react-router').Link;
 const browserHistory = require('react-router').browserHistory;
 
 const root = '/api';
@@ -19,105 +19,117 @@ let boardRoot = root;
 
 class App extends React.Component {
 
-	constructor(props) {
-		super(props);
-		boardRoot=boardRoot.concat('/threads/search/board');
-		this.state = {threads: [], attributes: [], pageSize: 20, links: {}};
-		this.updatePageSize = this.updatePageSize.bind(this);
-		this.onCreate = this.onCreate.bind(this);
-		this.onDelete = this.onDelete.bind(this);
-		this.onNavigate = this.onNavigate.bind(this);
-	}
+    constructor(props) {
+        super(props);
+        boardRoot = boardRoot.concat('/threads/search/board');
+        this.state = {threads: [], attributes: [], pageSize: 20, links: {}};
+        this.updatePageSize = this.updatePageSize.bind(this);
+        this.onCreate = this.onCreate.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+        this.onNavigate = this.onNavigate.bind(this);
+    }
 
-	// tag::follow-2[]
-	loadFromServer(pageSize) {
-        client({method: 'GET', path: boardRoot, params: {
-            	size: pageSize,
-            	uri: 'boards/'.concat(this.props.params.boardName)
-			}})
-			.done(threadCollection => {
-            let threads = threadCollection.entity._embedded.threads;
-			this.setState({
-				threads: threads,
-				attributes: ['title', 'text'],
-				pageSize: pageSize,
-				links: threadCollection.entity._links});
-		});
-	}
-	// end::follow-2[]
+    // tag::follow-2[]
+    loadFromServer(pageSize) {
+        client({
+            method: 'GET', path: boardRoot, params: {
+                size: pageSize,
+                uri: 'boards/'.concat(this.props.params.boardName)
+            }
+        })
+            .done(threadCollection => {
+                let threads = threadCollection.entity._embedded.threads;
+                this.setState({
+                    threads: threads,
+                    attributes: ['title', 'text'],
+                    pageSize: pageSize,
+                    links: threadCollection.entity._links
+                });
+            });
+    }
 
-	// tag::create[]
-	onCreate(newThread) {
-		follow(client, root, ['threads']).then(threadCollection => {
-			return client({
-				method: 'POST',
-				path: threadCollection.entity._links.self.href,
-				entity: newThread,
-				headers: {'Content-Type': 'application/json'}
-			})
-		})/*.then(response => {
-			return follow(client, root, [
-				{rel: 'threads', params: {'size': this.state.pageSize}}]);
-		})*/.done(response => {
+    // end::follow-2[]
+
+    // tag::create[]
+    onCreate(newThread) {
+        follow(client, root, ['threads']).then(threadCollection => {
+            return client({
+                method: 'POST',
+                path: threadCollection.entity._links.self.href,
+                entity: newThread,
+                headers: {'Content-Type': 'application/json'}
+            })
+        })/*.then(response => {
+         return follow(client, root, [
+         {rel: 'threads', params: {'size': this.state.pageSize}}]);
+         })*/.done(() => {
             this.loadFromServer(this.state.pageSize);
-		});
-	}
-	// end::create[]
+        });
+    }
 
-	// tag::delete[]
-	onDelete(thread) {
-		client({method: 'DELETE', path: thread._links.self.href}).done(response => {
-			this.loadFromServer(this.state.pageSize);
-		});
-	}
-	// end::delete[]
+    // end::create[]
 
-	// tag::navigate[]
-	onNavigate(navUri) {
-		client({method: 'GET', path: navUri}).done(threadCollection => {
-			this.setState({
-				threads: threadCollection.entity._embedded.threads,
-				attributes: this.state.attributes,
-				pageSize: this.state.pageSize,
-				links: threadCollection.entity._links
-			});
-		});
-	}
-	// end::navigate[]
+    // tag::delete[]
+    onDelete(thread) {
+        client({method: 'DELETE', path: thread._links.self.href}).done(() => {
+            this.loadFromServer(this.state.pageSize);
+        });
+    }
 
-	// tag::update-page-size[]
-	updatePageSize(pageSize) {
-		if (pageSize !== this.state.pageSize) {
-			this.loadFromServer(pageSize);
-		}
-	}
-	// end::update-page-size[]
+    // end::delete[]
 
-	// tag::follow-1[]
-	componentDidMount() {
-		this.loadFromServer(this.state.pageSize);
-	}
-	// end::follow-1[]
+    // tag::navigate[]
+    onNavigate(navUri) {
+        client({method: 'GET', path: navUri}).done(threadCollection => {
+            this.setState({
+                threads: threadCollection.entity._embedded.threads,
+                attributes: this.state.attributes,
+                pageSize: this.state.pageSize,
+                links: threadCollection.entity._links
+            });
+        });
+    }
 
-	render() {
-		return (
-			<div>
-				<CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName} onCreate={this.onCreate}/>
-				<ThreadList threads={this.state.threads}
-							  links={this.state.links}
-							  pageSize={this.state.pageSize}
-							  onNavigate={this.onNavigate}
-							  onDelete={this.onDelete}
-							  updatePageSize={this.updatePageSize}/>
-			</div>
-		)
-	}
+    // end::navigate[]
+
+    // tag::update-page-size[]
+    updatePageSize(pageSize) {
+        if (pageSize !== this.state.pageSize) {
+            this.loadFromServer(pageSize);
+        }
+    }
+
+    // end::update-page-size[]
+
+    // tag::follow-1[]
+    componentDidMount() {
+        this.loadFromServer(this.state.pageSize);
+    }
+
+    // end::follow-1[]
+
+    render() {
+        return (
+            <div>
+                <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
+                              onCreate={this.onCreate}/>
+                <ThreadList threads={this.state.threads}
+                            links={this.state.links}
+                            pageSize={this.state.pageSize}
+                            onNavigate={this.onNavigate}
+                            onDelete={this.onDelete}
+                            updatePageSize={this.updatePageSize}/>
+            </div>
+        )
+    }
 }
 
 ReactDOM.render(
-	<Router history={browserHistory}>
-		<Route path="/:boardName" component={App}/>
-		<Route path="/" component={BoardList}/>
-	</Router>,
-	document.getElementById('react')
+    <Router history={browserHistory}>
+        <Route path="/:boardName" component={App}/>
+        <Route path="/:boardName/thread/:threadId" component={ThreadList}/>
+        <Route path="/:boardName/*" component={App}/>
+        <Route path="/" component={BoardList}/>
+    </Router>,
+    document.getElementById('react')
 );

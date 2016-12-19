@@ -8,10 +8,11 @@ const boardsPath = '/api/boards';
 
 class ThreadList extends React.Component {
 
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
         this.state = {boards: [], attributes: []};
-	}
+    }
+
     // tag::follow-2[]
     loadFromServer() {
         client({method: 'GET', path: boardsPath})
@@ -20,35 +21,38 @@ class ThreadList extends React.Component {
                 this.setState({
                     boards: boards,
                     attributes: ['id', 'title'],
-				});
+                });
             });
     }
+
     // end::follow-2[]
 
     // tag::follow-1[]
     componentDidMount() {
         this.loadFromServer();
     }
+
     // end::follow-1[]
 
-	// tag::thread-list-render[]
-	render() {
-		let boards = this.state.boards.map(board =>
-			<div className="panel" key={board._links.self.href}>
-				<span><a href={board.id}>/{board.id}</a></span>
-				<span>{board.title}</span>
-			</div>
-		);
-		return (
-			<div>
-				<div>
-					<h3>Board List</h3>
-				</div>
-				{boards}
-			</div>
-		)
-	}
-	// end::thread-list-render[]
+    // tag::thread-list-render[]
+    render() {
+        let boards = this.state.boards.map(board =>
+            <div className="panel" key={board._links.self.href}>
+                <span><a href={board.id}>/{board.id}</a></span>
+                <span>{board.title}</span>
+            </div>
+        );
+        return (
+            <div>
+                <div>
+                    <h3>Board List</h3>
+                </div>
+                {boards}
+            </div>
+        )
+    }
+
+    // end::thread-list-render[]
 }
 
 export default ThreadList;

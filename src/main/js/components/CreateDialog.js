@@ -19,7 +19,7 @@ class CreateDialog extends React.Component {
         this.props.attributes.forEach(attribute => {
             newThread[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
-        newThread['board']='boards/'.concat(this.props.boardName);
+        newThread['board'] = 'boards/'.concat(this.props.boardName);
         this.props.onCreate(newThread);
 
         // clear out the dialog's inputs
@@ -34,7 +34,7 @@ class CreateDialog extends React.Component {
     render() {
         let inputs = this.props.attributes.map(attribute =>
             <p key={attribute}>
-                <input type="text" placeholder={attribute} ref={attribute} className="field" />
+                <input type="text" placeholder={attribute} ref={attribute} className="field"/>
             </p>
         );
         return (

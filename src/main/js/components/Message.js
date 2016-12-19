@@ -18,7 +18,7 @@ class Thread extends React.Component {
         return (
             <div className="message">
                 <MessageHeader thread={thread}
-                           onDelete={this.props.onDelete}/>
+                               onDelete={this.props.onDelete}/>
                 <blockquote className="message-text">{thread.text}</blockquote>
             </div>
         )

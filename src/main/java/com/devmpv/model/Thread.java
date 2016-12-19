@@ -19,8 +19,8 @@ public class Thread extends Message {
 	private Long updated;
 
 	public Thread() {
-		setTimestamp(System.currentTimeMillis());
 		this.updated = System.currentTimeMillis();
+		setTimestamp(this.updated);
 	}
 
 	public Thread(Board board, String title, String text) {
@@ -36,12 +36,12 @@ public class Thread extends Message {
 		return board;
 	}
 
-	public Set<Message> getMessages() {
-		return messages;
-	}
-
 	public void setBoard(Board board) {
 		this.board = board;
+	}
+
+	public Set<Message> getMessages() {
+		return messages;
 	}
 
 	public void setMessages(Set<Message> messages) {

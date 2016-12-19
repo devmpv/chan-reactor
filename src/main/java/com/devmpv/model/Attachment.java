@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(indexes = { @Index(columnList = "md5", unique = true) })
+@Table(indexes = {@Index(columnList = "md5", unique = true)})
 public class Attachment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

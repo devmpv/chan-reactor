@@ -1,5 +1,14 @@
 package com.devmpv.service;
 
+import com.devmpv.model.Attachment;
+import com.devmpv.model.AttachmentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,16 +18,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-
-import com.devmpv.model.Attachment;
-import com.devmpv.model.AttachmentRepository;
 
 @Service
 public class AttachmentService {
@@ -66,15 +65,15 @@ public class AttachmentService {
 		}
 	}
 
-	public File getFile(Attachment attachment) {
+	private File getFile(Attachment attachment) {
 		return storagePath.resolve(attachment.getMd5()).toFile();
 	}
 
 	public Map<Attachment, File> getFileSet(Set<Attachment> attach) {
 		Map<Attachment, File> result = new HashMap<>();
-		attach.stream().filter(a -> Files.exists(storagePath.resolve(a.getMd5()))).forEach(a -> {
-			result.put(a, getFile(a));
-		});
+		attach.stream()
+				.filter(a -> Files.exists(storagePath.resolve(a.getMd5())))
+				.forEach(a -> result.put(a, getFile(a)));
 		return result;
 	}
 }
