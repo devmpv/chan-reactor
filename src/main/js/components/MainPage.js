@@ -3,7 +3,7 @@
 // tag::vars[]
 const React = require('react');
 const client = require('../client');
-const boardsPath = '/api/boards';
+const boardsPath = '/rest/api/boards';
 // end::vars[]
 
 class MainPage extends React.Component {
