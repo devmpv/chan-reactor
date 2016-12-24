@@ -1,28 +1,18 @@
 package com.devmpv.model;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Message {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "thread_id", nullable = true)
+	@JoinColumn
 	private Thread thread;
 
 	private String title;
@@ -33,7 +23,8 @@ public class Message {
 
 	@Column(nullable = false)
 	private Long timestamp;
-
+	@Column(nullable = false)
+	private Long updated;
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "message_attachment")
 	private Set<Attachment> attachments = new HashSet<>();
@@ -41,14 +32,27 @@ public class Message {
 	protected Message() {
 	}
 
-	public Message(Thread thread, String title, String text) {
-		this.title = title;
-		this.text = text;
-		this.thread = thread;
+	public Message(String title, String text) {
+		setTitle(title);
+		setText(text);
+		setTimestamp(System.currentTimeMillis());
+		setUpdated(System.currentTimeMillis());
+	}
+
+	public Long getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Long updated) {
+		this.updated = updated;
 	}
 
 	public Set<Attachment> getAttachments() {
 		return attachments;
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 	public Long getId() {
@@ -59,32 +63,28 @@ public class Message {
 		return text;
 	}
 
-	public Thread getThread() {
-		return thread;
-	}
-
-	public Long getTimestamp() {
-		return timestamp;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setAttachments(Set<Attachment> attachments) {
-		this.attachments = attachments;
-	}
-
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public Thread getThread() {
+		return thread;
 	}
 
 	public void setThread(Thread thread) {
 		this.thread = thread;
 	}
 
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public void setTitle(String title) {

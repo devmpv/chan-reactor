@@ -1,13 +1,14 @@
 'use strict';
 
 import ThreadPreview from "./ThreadPreview";
+import Message from "./Message";
 
 // tag::vars[]
 const React = require('react');
 const ReactDOM = require('react-dom');
 // end::vars[]
 
-class ThreadList extends React.Component {
+class ItemList extends React.Component {
 
     constructor(props) {
         super(props);
@@ -55,11 +56,21 @@ class ThreadList extends React.Component {
 
     // end::handle-nav[]
 
-    // tag::thread-list-render[]
+    // tag::message-list-render[]
     render() {
-        let threads = this.props.threads.map(thread =>
-            <ThreadPreview key={thread._links.self.href} thread={thread} onDelete={this.props.onDelete}/>
-        );
+        let firstItem = this.props.items[0];
+        let items;
+        if (firstItem) {
+            if (firstItem._links.board) {
+                items = this.props.items.map(item =>
+                    <ThreadPreview key={item._links.self.href} thread={item} onDelete={this.props.onDelete}/>
+                );
+            } else {
+                items = this.props.items.map(item =>
+                    <Message key={item._links.self.href} message={item} onDelete={this.props.onDelete}/>
+                );
+            }
+        }
 
         let navLinks = [];
         if ("first" in this.props.links) {
@@ -77,19 +88,16 @@ class ThreadList extends React.Component {
 
         return (
             <div>
-                <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
-                <div>
-                    <h3>Thread List!!</h3>
-                </div>
-                {threads}
+                {items}
                 <div>
                     {navLinks}
                 </div>
+                <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
             </div>
         )
     }
 
-    // end::thread-list-render[]
+    // end::message-list-render[]
 }
 
-export default ThreadList;
+export default ItemList;

@@ -6,7 +6,7 @@ const path = window.location.pathname.concat("/thread/");
 // end::vars[]
 
 
-// tag::thread[]
+// tag::message[]
 class MessageHeader extends React.Component {
 
     constructor(props) {
@@ -15,19 +15,19 @@ class MessageHeader extends React.Component {
     }
 
     handleDelete() {
-        this.props.onDelete(this.props.thread);
+        this.props.onDelete(this.props.message);
     }
 
     render() {
-        let date = (new Date(this.props.thread.timestamp)).toLocaleString();
-        let replyHref = path.concat(this.props.thread.id);
+        let date = (new Date(this.props.message.timestamp)).toLocaleString();
+        let replyHref = path.concat(this.props.message.id);
         return (
             <div className="message-header">
                 <span><input type="checkbox" name="delete"/></span>
-                <span className="message-title">{this.props.thread.title}</span>
+                <span className="message-title">{this.props.message.title}</span>
                 <span>Anonymous</span>
                 <span>{date}</span>
-                <span>Id: {this.props.thread.id}</span>
+                <span>Id: {this.props.message.id}</span>
                 <span>
 					<button onClick={this.handleDelete}>Delete</button>
 				</span>
@@ -41,6 +41,6 @@ class MessageHeader extends React.Component {
         )
     }
 }
-// end::thread[]
+// end::message[]
 
 export default MessageHeader;

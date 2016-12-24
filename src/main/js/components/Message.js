@@ -1,12 +1,12 @@
 'use strict';
 
-import MessageHeader from './MessageHeader';
+import MessageHeader from "./MessageHeader";
 
 // tag::vars[]
 const React = require('react');
 // end::vars[]
 
-// tag::thread[]
+// tag::message[]
 class Thread extends React.Component {
 
     constructor(props) {
@@ -14,16 +14,16 @@ class Thread extends React.Component {
     }
 
     render() {
-        let thread = this.props.thread;
+        let message = this.props.message;
         return (
             <div className="message">
-                <MessageHeader thread={thread}
+                <MessageHeader message={message}
                                onDelete={this.props.onDelete}/>
-                <blockquote className="message-text">{thread.text}</blockquote>
+                <blockquote className="message-text">{message.text}</blockquote>
             </div>
         )
     }
 }
-// end::thread[]
+// end::message[]
 
 export default Thread;

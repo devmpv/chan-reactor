@@ -1,12 +1,12 @@
 'use strict';
 
-import Message from './Message';
+import Message from "./Message";
 
 // tag::vars[]
 const React = require('react');
 // end::vars[]
 
-// tag::thread[]
+// tag::message[]
 class ThreadPreview extends React.Component {
 
     constructor(props) {
@@ -14,14 +14,13 @@ class ThreadPreview extends React.Component {
     }
 
     render() {
-        let thread = this.props.thread;
         return (
             <div className="panel">
-                <Message thread={thread} onDelete={this.props.onDelete}/>
+                <Message message={this.props.thread} onDelete={this.props.onDelete}/>
             </div>
         )
     }
 }
-// end::thread[]
+// end::message[]
 
 export default ThreadPreview;

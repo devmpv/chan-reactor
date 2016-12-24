@@ -1,7 +1,7 @@
 package com.devmpv.service;
 
 import com.devmpv.model.Attachment;
-import com.devmpv.model.AttachmentRepository;
+import com.devmpv.repositories.AttachmentRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ public class AttachmentService {
 	private static final Logger LOG = LoggerFactory.getLogger(AttachmentService.class);
 
 	private Path storagePath;
-	private AttachmentRepository repo;
+	private AttachmentRepo repo;
 
 	@Autowired
-	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepository repo)
+	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepo repo)
 			throws Exception {
 		this.repo = repo;
 		this.storagePath = Paths.get(filestorage.replaceFirst("^~", System.getProperty("user.home")));

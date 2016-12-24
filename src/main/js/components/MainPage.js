@@ -6,7 +6,7 @@ const client = require('../client');
 const boardsPath = '/api/boards';
 // end::vars[]
 
-class ThreadList extends React.Component {
+class MainPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,7 +34,7 @@ class ThreadList extends React.Component {
 
     // end::follow-1[]
 
-    // tag::thread-list-render[]
+    // tag::message-list-render[]
     render() {
         let boards = this.state.boards.map(board =>
             <div className="panel" key={board._links.self.href}>
@@ -52,7 +52,7 @@ class ThreadList extends React.Component {
         )
     }
 
-    // end::thread-list-render[]
+    // end::message-list-render[]
 }
 
-export default ThreadList;
+export default MainPage;

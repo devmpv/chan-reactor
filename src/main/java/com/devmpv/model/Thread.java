@@ -1,9 +1,7 @@
 package com.devmpv.model;
 
-import java.util.Set;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 public class Thread extends Message {
@@ -15,21 +13,13 @@ public class Thread extends Message {
 	@JoinColumn(name = "board_id", nullable = false)
 	private Board board;
 
-	@Column(nullable = false)
-	private Long updated;
-
 	public Thread() {
-		this.updated = System.currentTimeMillis();
-		setTimestamp(this.updated);
+		setTimestamp(System.currentTimeMillis());
 	}
 
 	public Thread(Board board, String title, String text) {
+		super(title, text);
 		this.board = board;
-		setThread(null);
-		setTitle(title);
-		setText(text);
-		setTimestamp(System.currentTimeMillis());
-		this.updated = System.currentTimeMillis();
 	}
 
 	public Board getBoard() {
@@ -46,13 +36,5 @@ public class Thread extends Message {
 
 	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
-	}
-
-	public Long getUpdated() {
-		return updated;
-	}
-
-	public void setUpdated(Long updated) {
-		this.updated = updated;
 	}
 }
