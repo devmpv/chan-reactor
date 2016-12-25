@@ -6,12 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -75,5 +79,24 @@ public class AttachmentService {
 				.filter(a -> Files.exists(storagePath.resolve(a.getMd5())))
 				.forEach(a -> result.put(a, getFile(a)));
 		return result;
+	}
+
+	public void store(MultipartFile file) {
+		try {
+			Files.copy(file.getInputStream(), this.storagePath.resolve(file.getOriginalFilename()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Resource loadAsResource(String filename) {
+		Path file = storagePath.resolve(filename);
+		Resource resource = null;
+		try {
+			resource = new UrlResource(file.toUri());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return resource;
 	}
 }
