@@ -21,30 +21,33 @@ class CreateDialog extends React.Component {
         e.preventDefault();
         let form = new FormData();
         this.state.files.map(file => form.append(file.name, file));
-        const request = {
-            method: 'POST',
-            path: '/files/upload',
-            entity: form,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        };
-        client(request).done(response => {
-            console.log(response);
-            this.setState({
-                files: []
-            });
-        });
-        let newThread = {};
+        
+        /*let newThread = {};
         newThread['title'] = ReactDOM.findDOMNode(this.refs['title']).value.trim();
         newThread['text'] = ReactDOM.findDOMNode(this.refs['text']).value.trim();
-        newThread['board'] = 'boards/'.concat(this.props.boardName);
-        this.props.onCreate(newThread);
-
-        // clear out the dialog's inputs
-        ReactDOM.findDOMNode(this.refs['title']).value = '';
-        ReactDOM.findDOMNode(this.refs['text']).value = '';
-
+        newThread['board'] = 'boards/'.concat(this.props.boardName);*/
+        
+        form.append('title', ReactDOM.findDOMNode(this.refs['title']).value.trim());
+        form.append('text', ReactDOM.findDOMNode(this.refs['text']).value.trim());
+        form.append('board', this.props.boardName);
+        
+        const request = {
+                method: 'POST',
+                path: '/res/submit',
+                entity: form,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+        client(request).done(response => {
+                console.log(response);
+                ReactDOM.findDOMNode(this.refs['title']).value = '';
+                ReactDOM.findDOMNode(this.refs['text']).value = '';
+                this.setState({
+                    files: []
+                });
+        });
+        //this.props.onCreate(newThread);
         // Navigate away from the dialog to hide it.
         window.location = "#";
     }
@@ -74,9 +77,11 @@ class CreateDialog extends React.Component {
                                           className="qcomment">
                                 </textarea>
                             </div>
-                            <div>
+                            <div width="400px">
                                 <Dropzone onDrop={this.onDrop}>
-                                    <div>Try dropping some files here, or click to select files to upload.</div>
+                                    <div height="50px">Try dropping some files here, or click to select files to
+                                        upload.
+                                    </div>
                                 </Dropzone>
                                 {this.state.files.length > 0 ? <div>
                                     <h2>Uploading {this.state.files.length} files...</h2>

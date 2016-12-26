@@ -1,17 +1,5 @@
 package com.devmpv.service;
 
-import com.devmpv.model.Attachment;
-import com.devmpv.repositories.AttachmentRepo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +11,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.devmpv.model.Attachment;
+import com.devmpv.repositories.AttachmentRepo;
+
 @Service
 public class AttachmentService {
 	private static final Logger LOG = LoggerFactory.getLogger(AttachmentService.class);
@@ -31,8 +32,7 @@ public class AttachmentService {
 	private AttachmentRepo repo;
 
 	@Autowired
-	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepo repo)
-			throws Exception {
+	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepo repo) throws Exception {
 		this.repo = repo;
 		this.storagePath = Paths.get(filestorage.replaceFirst("^~", System.getProperty("user.home")));
 		if (!Files.exists(storagePath)) {
@@ -45,14 +45,14 @@ public class AttachmentService {
 		}
 	}
 
-	public Attachment add(File value) throws Exception {
+	public Attachment add(File value) throws IOException {
 		Attachment attach = null;
 		String md5 = "";
 		try {
 			md5 = String.valueOf(DigestUtils.md5DigestAsHex(new FileInputStream(value)));
 			attach = repo.findByMd5(md5);
 			if (null != attach) {
-				throw new Exception("File alredy present on the board");
+				throw new IOException("File alredy present on the board");
 			}
 			Files.copy(value.toPath(), storagePath.resolve(md5));
 			attach = new Attachment();
@@ -61,7 +61,7 @@ public class AttachmentService {
 			return attach;
 		} catch (IOException e) {
 			LOG.error("Error saving attachment", e);
-			throw new Exception("Error saving attachment");
+			throw new IOException("Error saving attachment");
 		} finally {
 			if (!md5.isEmpty() && null == attach) {
 				Files.deleteIfExists(storagePath.resolve(md5));
@@ -75,18 +75,9 @@ public class AttachmentService {
 
 	public Map<Attachment, File> getFileSet(Set<Attachment> attach) {
 		Map<Attachment, File> result = new HashMap<>();
-		attach.stream()
-				.filter(a -> Files.exists(storagePath.resolve(a.getMd5())))
+		attach.stream().filter(a -> Files.exists(storagePath.resolve(a.getMd5())))
 				.forEach(a -> result.put(a, getFile(a)));
 		return result;
-	}
-
-	public void store(MultipartFile file) {
-		try {
-			Files.copy(file.getInputStream(), this.storagePath.resolve(file.getOriginalFilename()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public Resource loadAsResource(String filename) {
@@ -98,5 +89,13 @@ public class AttachmentService {
 			e.printStackTrace();
 		}
 		return resource;
+	}
+
+	public void store(MultipartFile file) {
+		try {
+			Files.copy(file.getInputStream(), this.storagePath.resolve(file.getOriginalFilename()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

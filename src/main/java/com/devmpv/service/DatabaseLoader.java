@@ -3,7 +3,7 @@ package com.devmpv.service;
 import com.devmpv.model.Board;
 import com.devmpv.model.Message;
 import com.devmpv.model.Thread;
-import com.devmpv.repositories.BoardRepo;
+import com.devmpv.repositories.BoardRepository;
 import com.devmpv.repositories.MessageRepository;
 import com.devmpv.repositories.ThreadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import static java.lang.String.format;
 public class DatabaseLoader implements CommandLineRunner {
 
 	private final ThreadRepository threadRepo;
-	private final BoardRepo boardRepo;
+	private final BoardRepository boardRepo;
 	private final MessageRepository messageRepository;
 
 	@Autowired
-	public DatabaseLoader(ThreadRepository threadRepo, BoardRepo boardRepo, MessageRepository messageRepository) {
+	public DatabaseLoader(ThreadRepository threadRepo, BoardRepository boardRepo, MessageRepository messageRepository) {
 		this.threadRepo = threadRepo;
 		this.boardRepo = boardRepo;
 		this.messageRepository = messageRepository;
