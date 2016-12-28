@@ -63,8 +63,8 @@ class CreateDialog extends React.Component {
     render() {
         return (
             <div>
-                <a href="#createThread">Create</a>
-                <div id="createThread" className="modalDialog">
+                <a href="#message">Create</a>
+                <div id="message" className="modalDialog">
                     <div>
                         <a href="#" title="Close" className="close">X</a>
                         <h2>Create new thread</h2>

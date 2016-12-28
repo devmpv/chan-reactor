@@ -11,14 +11,19 @@ import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(indexes = {@Index(columnList = "md5", unique = true)})
+@Table(indexes = { @Index(columnList = "md5", unique = true) })
 public class Attachment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@JsonIgnore
 	private String md5;
+
+	private String name;
 
 	@ManyToMany(mappedBy = "attachments")
 	private Set<Message> messages = new HashSet<>();
@@ -31,11 +36,19 @@ public class Attachment {
 		return md5;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
 
 	public void setMd5(String md5) {
 		this.md5 = md5;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -63,11 +63,15 @@ class ItemList extends React.Component {
         if (firstItem) {
             if (firstItem._links.board) {
                 items = this.props.items.map(item =>
-                    <ThreadPreview key={item._links.self.href} thread={item} onDelete={this.props.onDelete}/>
+                    <ThreadPreview key={item._links.self.href} thread={item}
+                    onThumbClick={this.props.onThumbClick}
+                    onDelete={this.props.onDelete}/>
                 );
             } else {
                 items = this.props.items.map(item =>
-                    <Message key={item._links.self.href} message={item} onDelete={this.props.onDelete}/>
+                    <Message key={item._links.self.href} message={item} 
+                    onThumbClick={this.props.onThumbClick}
+                    onDelete={this.props.onDelete}/>
                 );
             }
         }

@@ -1,8 +1,20 @@
 package com.devmpv.model;
 
-import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -23,11 +35,13 @@ public class Message {
 
 	@Column(nullable = false)
 	private Long timestamp;
+
 	@Column(nullable = false)
 	private Long updated;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "message_attachment")
-	private Set<Attachment> attachments = new HashSet<>();
+	private Set<Attachment> attachments;
 
 	protected Message() {
 	}
@@ -39,20 +53,8 @@ public class Message {
 		setUpdated(System.currentTimeMillis());
 	}
 
-	public Long getUpdated() {
-		return updated;
-	}
-
-	public void setUpdated(Long updated) {
-		this.updated = updated;
-	}
-
 	public Set<Attachment> getAttachments() {
 		return attachments;
-	}
-
-	public void setAttachments(Set<Attachment> attachments) {
-		this.attachments = attachments;
 	}
 
 	public Long getId() {
@@ -63,31 +65,43 @@ public class Message {
 		return text;
 	}
 
-	public void setText(String text) {
-		this.text = text;
-	}
-
 	public Thread getThread() {
 		return thread;
-	}
-
-	public void setThread(Thread thread) {
-		this.thread = thread;
 	}
 
 	public Long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Long timestamp) {
-		this.timestamp = timestamp;
-	}
-
 	public String getTitle() {
 		return title;
 	}
 
+	public Long getUpdated() {
+		return updated;
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public void setThread(Thread thread) {
+		this.thread = thread;
+	}
+
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public void setUpdated(Long updated) {
+		this.updated = updated;
 	}
 }

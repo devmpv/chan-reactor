@@ -4,21 +4,33 @@ import MessageHeader from "./MessageHeader";
 
 // tag::vars[]
 const React = require('react');
+const srcPath = '/src/attach/';
+const thumbPath = srcPath+'thumbs/';
 // end::vars[]
 
 // tag::message[]
-class Thread extends React.Component {
+class Message extends React.Component {
 
     constructor(props) {
         super(props);
+        this.handleThumbClick = this.handleThumbClick.bind(this);
+    }
+    
+    handleThumbClick(event){
+        this.props.onThumbClick(event.target.id);
     }
 
     render() {
         let message = this.props.message;
+        let attachThumbs = this.props.message.attachments.map(attach => 
+            <span key={attach.name}>
+                <img id = {attach.name} src={thumbPath+attach.name} onClick={this.handleThumbClick} />
+            </span>
+        );
         return (
             <div className="message">
-                <MessageHeader message={message}
-                               onDelete={this.props.onDelete}/>
+                <MessageHeader message={message} onDelete={this.props.onDelete}/>
+                {attachThumbs}
                 <blockquote className="message-text">{message.text}</blockquote>
             </div>
         )
@@ -26,4 +38,4 @@ class Thread extends React.Component {
 }
 // end::message[]
 
-export default Thread;
+export default Message;

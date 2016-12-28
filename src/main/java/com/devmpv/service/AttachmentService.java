@@ -1,7 +1,6 @@
 package com.devmpv.service;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -24,48 +23,70 @@ import org.springframework.web.multipart.MultipartFile;
 import com.devmpv.model.Attachment;
 import com.devmpv.repositories.AttachmentRepo;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 @Service
 public class AttachmentService {
 	private static final Logger LOG = LoggerFactory.getLogger(AttachmentService.class);
 
 	private Path storagePath;
+	private Path thumbPath;
 	private AttachmentRepo repo;
 
 	@Autowired
 	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepo repo) throws Exception {
 		this.repo = repo;
 		this.storagePath = Paths.get(filestorage.replaceFirst("^~", System.getProperty("user.home")));
-		if (!Files.exists(storagePath)) {
+		this.thumbPath = storagePath.resolve("thumbs");
+		checkPathExists(storagePath);
+		checkPathExists(thumbPath);
+	}
+
+	public Attachment add(MultipartFile value) throws IOException {
+		Attachment attach = null;
+		String md5 = "";
+		try {
+			md5 = String.valueOf(DigestUtils.md5DigestAsHex(value.getInputStream()));
+			attach = repo.findByMd5(md5);
+			if (null != attach) {
+				return attach;
+			}
+			String savedName = md5.concat(getExtension(value.getOriginalFilename()));
+			Path savedPath = storagePath.resolve(savedName);
+			Files.copy(value.getInputStream(), savedPath);
+			Thumbnails.of(value.getInputStream()).size(150, 150).toFile(thumbPath.resolve(savedName).toString());
+			attach = new Attachment();
+			attach.setMd5(md5);
+			attach.setName(savedName);
+			attach = repo.save(attach);
+			return attach;
+		} catch (IOException e) {
+			LOG.error("Error saving attachment", e);
+			throw new IOException("Error saving attachment", e);
+		} finally {
+			if (!md5.isEmpty() && null == attach) {
+				Files.deleteIfExists(storagePath.resolve(md5));
+			}
+		}
+	}
+
+	private void checkPathExists(Path path) throws IOException {
+		if (!Files.exists(path)) {
 			try {
-				Files.createDirectories(storagePath);
+				Files.createDirectories(path);
 			} catch (IOException e) {
-				LOG.error("Unable to create attachment directory.", e);
+				LOG.error(String.format("Unable to create directory [%s]", path.toString()), e);
 				throw e;
 			}
 		}
 	}
 
-	public Attachment add(File value) throws IOException {
-		Attachment attach = null;
-		String md5 = "";
-		try {
-			md5 = String.valueOf(DigestUtils.md5DigestAsHex(new FileInputStream(value)));
-			attach = repo.findByMd5(md5);
-			if (null != attach) {
-				throw new IOException("File alredy present on the board");
-			}
-			Files.copy(value.toPath(), storagePath.resolve(md5));
-			attach = new Attachment();
-			attach.setMd5(md5);
-			attach = repo.save(attach);
-			return attach;
-		} catch (IOException e) {
-			LOG.error("Error saving attachment", e);
-			throw new IOException("Error saving attachment");
-		} finally {
-			if (!md5.isEmpty() && null == attach) {
-				Files.deleteIfExists(storagePath.resolve(md5));
-			}
+	private String getExtension(String filename) {
+		int dotIndex = filename.lastIndexOf('.');
+		if (dotIndex > 0) {
+			return filename.substring(dotIndex, filename.length());
+		} else {
+			return "";
 		}
 	}
 

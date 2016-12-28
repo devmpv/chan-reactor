@@ -5,7 +5,6 @@ import static com.devmpv.config.Const.TEXT;
 import static com.devmpv.config.Const.THREAD;
 import static com.devmpv.config.Const.TITLE;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -46,10 +45,8 @@ public class MessageService {
 		Set<Attachment> result = new HashSet<>();
 		Set<String> errors = new HashSet<>();
 		files.forEach((name, file) -> {
-			File convFile = new File(file.getOriginalFilename());
 			try {
-				file.transferTo(convFile);
-				result.add(attachmentService.add(convFile));
+				result.add(attachmentService.add(file));
 			} catch (IllegalStateException | IOException e) {
 				errors.add(name);
 			}

@@ -40,6 +40,24 @@ span {padding: 8px}
 .message .message-text {overflow: auto;}
 .message.reply .message-text {  max-height: 600px;}
 
+#content-viewer {
+	position: absolute;
+	margin: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	display: none;
+	padding: 8px;
+	box-sizing: content-box;
+	z-index: 9999;
+	background-color: rgb(85, 85, 85);
+}
+
+#content-viewer-controls {display:none;font-size: 0.8em;cursor: pointer;}
+#content-viewer-controls i {position: absolute;background: rgb(85, 85, 85);padding: 3px 5px;color: #CCC;}
+#content-viewer-controls i.fa-times {top: 6px;left: 6px;}
+#content-viewer-controls i.fa-thumb-tack {top: 6px;left: 24px;}
+
 /*Classes for creating dialogs*/
 
 .modalDialog {

@@ -1,11 +1,13 @@
 import CreateDialog from "./CreateDialog";
 import ItemList from "./ItemList";
+import ContentViewer from "./ContentViewer";
 
 const React = require('react');
 const client = require('../client');
 const follow = require('../follow');
 //const Link = require('react-router').Link;
 
+const srcPath = '/src/attach/';
 const root = '/rest/api';
 let searchRoot = root;
 let uri = '';
@@ -17,10 +19,11 @@ class BoardView extends React.Component {
         searchRoot = searchRoot.concat('/threads/search/board');
         uri = '/'.concat(this.props.params.boardName);
 
-        this.state = {items: [], attributes: [], pageSize: 20, links: {}};
+        this.state = {items: [], attributes: [], pageSize: 20, links: {}, contentSrc: "/img/redo.png"};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onThumbClick = this.onThumbClick.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
     }
 
@@ -68,6 +71,14 @@ class BoardView extends React.Component {
     }
 
     // end::delete[]
+    
+    // tag::delete[]
+    onThumbClick(attachName) {
+        this.setState({contentSrc: srcPath + attachName});
+        document.getElementById('content-viewer').style.display='block';
+    }
+
+    // end::delete[]
 
     // tag::navigate[]
     onNavigate(navUri) {
@@ -101,7 +112,7 @@ class BoardView extends React.Component {
 
     render() {
         return (
-            <div>
+            <div onClick={this.onBlankClick}>
                 <a href="/">Home</a>
                 <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
@@ -110,8 +121,10 @@ class BoardView extends React.Component {
                           pageSize={this.state.pageSize}
                           onNavigate={this.onNavigate}
                           onDelete={this.onDelete}
+                          onThumbClick={this.onThumbClick}
                           updatePageSize={this.updatePageSize}/>
-            </div>
+                <ContentViewer contentSrc={this.state.contentSrc}/>
+                </div>
         )
     }
 }
