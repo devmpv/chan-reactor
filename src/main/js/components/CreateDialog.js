@@ -2,9 +2,7 @@
 
 // tag::vars[]
 const React = require('react');
-const ReactDOM = require('react-dom');
 const Dropzone = require('react-dropzone');
-const client = require('../client');
 // end::vars[]
 
 // tag::create-dialog[]
@@ -20,40 +18,45 @@ class CreateDialog extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         let form = new FormData();
-        this.state.files.map(file => form.append(file.name, file));
-        
-        form.append('title', ReactDOM.findDOMNode(this.refs['title']).value.trim());
-        form.append('text', ReactDOM.findDOMNode(this.refs['text']).value.trim());
+        let title = this.refs['title'].value.trim();
+        let text = this.refs['text'].value.trim();
         if (this.props.threadId) {
             form.append('thread', this.props.threadId);
         }else {
+            if (title === '') {
+              window.alert('Title cannot be empty!');
+              return;
+            }
+            if (this.state.files.length === 0) {
+              window.alert('Thread needs an image!');
+              return;
+            }
             form.append('board', this.props.boardName);
         }
-        
-        const request = {
-                method: 'POST',
-                path: '/res/submit',
-                entity: form,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            };
-        client(request).done(response => {
-                console.log(response);
-                ReactDOM.findDOMNode(this.refs['title']).value = '';
-                ReactDOM.findDOMNode(this.refs['text']).value = '';
-                this.setState({
-                    files: []
-                });
+        if (text === '') {
+            window.alert('Text cannot be empty!');
+            return;
+        }
+        this.state.files.map(file => form.append(file.name, file));
+
+        form.append('title', title);
+        form.append('text', text);
+        this.props.onCreate(form);
+
+        this.refs['title'].value = '';
+        this.refs['text'].value = '';
+        this.setState({
+            files: []
         });
-        //this.props.onCreate(newThread);
+
         // Navigate away from the dialog to hide it.
         window.location = "#";
     }
 
     onDrop(acceptedFiles, rejectedFiles) {
-        console.log('Accepted files: ', acceptedFiles);
-        console.log('Rejected files: ', rejectedFiles);
+        if (rejectedFiles.length > 0) {
+            console.log(rejectedFiles);
+        }
         this.setState({
             files: acceptedFiles
         });
@@ -104,5 +107,9 @@ class CreateDialog extends React.Component {
     }
 }
 // end::create-dialog[]
-
+CreateDialog.propTypes = {
+  threadId: React.PropTypes.string,
+  boardName: React.PropTypes.string,
+  onCreate: React.PropTypes.func.isRequired
+}
 export default CreateDialog;

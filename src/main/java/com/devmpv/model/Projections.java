@@ -1,22 +1,22 @@
 package com.devmpv.model;
 
-import org.springframework.data.rest.core.config.Projection;
-
 import java.util.Set;
 
+import org.springframework.data.rest.core.config.Projection;
+
 public interface Projections {
-	@Projection(name = "inlineAttachments", types = {Thread.class, Message.class})
+	@Projection(name = "inlineAttachments", types = { Thread.class, Message.class })
 	public interface InlineAttachments {
 		Set<Attachment> getAttachments();
 
-		String getId();
+		long getId();
 
 		String getText();
 
-		String getTimestamp();
+		long getTimestamp();
 
 		String getTitle();
 
-		String getUpdated();
+		long getUpdated();
 	}
 }

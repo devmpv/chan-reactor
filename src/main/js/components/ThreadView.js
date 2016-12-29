@@ -5,7 +5,6 @@ import ContentViewer from "./ContentViewer";
 
 const React = require('react');
 const client = require('../client');
-const follow = require('../follow');
 
 const root = '/rest/api';
 const srcPath = '/src/attach/';
@@ -71,15 +70,17 @@ class ThreadView extends React.Component {
     // end::follow-2[]
 
     // tag::create[]
-    onCreate(newThread) {
-        follow(client, root, ['messages']).then(threadCollection => {
-            return client({
-                method: 'POST',
-                path: threadCollection.entity._links.self.href,
-                entity: newThread,
-                headers: {'Content-Type': 'application/json'}
-            })
-        }).done(() => {
+    onCreate(form) {
+      const request = {
+              method: 'POST',
+              path: '/res/submit',
+              entity: form,
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+          };
+      client(request).done(
+        () => {
             this.loadFromServer(this.state.pageSize);
         });
     }
@@ -168,4 +169,7 @@ class ThreadView extends React.Component {
         )
     }
 }
+ThreadView.propTypes = {
+  params: React.PropTypes.object.isRequired,
+};
 export default ThreadView;

@@ -16,7 +16,7 @@ class ContentViewer extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
     render() {
         let style = this.props.content.visible ? block : none;
         return (
@@ -27,5 +27,10 @@ class ContentViewer extends React.Component {
     }
 }
 // end::message[]
+
+ContentViewer.propTypes = {
+  content: React.PropTypes.object.isRequired,
+  onThumbClick: React.PropTypes.func.isRequired
+}
 
 export default ContentViewer;

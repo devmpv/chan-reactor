@@ -4,7 +4,6 @@ import ContentViewer from "./ContentViewer";
 
 const React = require('react');
 const client = require('../client');
-const follow = require('../follow');
 
 const srcPath = '/src/attach/';
 const root = '/rest/api';
@@ -56,15 +55,17 @@ class BoardView extends React.Component {
     // end::follow-2[]
 
     // tag::create[]
-    onCreate(newThread) {
-        follow(client, root, ['threads']).then(threadCollection => {
-            return client({
-                method: 'POST',
-                path: threadCollection.entity._links.self.href,
-                entity: newThread,
-                headers: {'Content-Type': 'application/json'}
-            })
-        }).done(() => {
+    onCreate(form) {
+      const request = {
+              method: 'POST',
+              path: '/res/submit',
+              entity: form,
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+          };
+      client(request).done(
+        () => {
             this.loadFromServer(this.state.pageSize);
         });
     }
@@ -137,7 +138,7 @@ class BoardView extends React.Component {
                 <a href="/">Home</a>
                 <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
-                <ItemList board="true"
+                {this.state.items ? <ItemList board="true"
                           items={this.state.items}
                           links={this.state.links}
                           pageSize={this.state.pageSize}
@@ -145,9 +146,13 @@ class BoardView extends React.Component {
                           onDelete={this.onDelete}
                           onThumbClick={this.onThumbClick}
                           updatePageSize={this.updatePageSize}/>
+                        : null}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
             </div>
         )
     }
 }
+BoardView.propTypes = {
+  params: React.PropTypes.object.isRequired,
+};
 export default BoardView;
