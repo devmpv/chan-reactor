@@ -53,8 +53,12 @@ public class AttachmentService {
 			}
 			String savedName = md5.concat(getExtension(value.getOriginalFilename()));
 			Path savedPath = storagePath.resolve(savedName);
-			Files.copy(value.getInputStream(), savedPath);
-			Thumbnails.of(value.getInputStream()).size(150, 150).toFile(thumbPath.resolve(savedName).toString());
+			if (!Files.exists(savedPath)) {
+				Files.copy(value.getInputStream(), savedPath);
+			}
+			if (!Files.exists(thumbPath.resolve(savedName))) {
+				Thumbnails.of(value.getInputStream()).size(150, 150).toFile(thumbPath.resolve(savedName).toString());
+			}
 			attach = new Attachment();
 			attach.setMd5(md5);
 			attach.setName(savedName);

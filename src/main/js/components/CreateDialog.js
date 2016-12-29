@@ -22,14 +22,13 @@ class CreateDialog extends React.Component {
         let form = new FormData();
         this.state.files.map(file => form.append(file.name, file));
         
-        /*let newThread = {};
-        newThread['title'] = ReactDOM.findDOMNode(this.refs['title']).value.trim();
-        newThread['text'] = ReactDOM.findDOMNode(this.refs['text']).value.trim();
-        newThread['board'] = 'boards/'.concat(this.props.boardName);*/
-        
         form.append('title', ReactDOM.findDOMNode(this.refs['title']).value.trim());
         form.append('text', ReactDOM.findDOMNode(this.refs['text']).value.trim());
-        form.append('board', this.props.boardName);
+        if (this.props.threadId) {
+            form.append('thread', this.props.threadId);
+        }else {
+            form.append('board', this.props.boardName);
+        }
         
         const request = {
                 method: 'POST',
@@ -77,7 +76,7 @@ class CreateDialog extends React.Component {
                                           className="qcomment">
                                 </textarea>
                             </div>
-                            <div width="400px">
+                            <div>
                                 <Dropzone onDrop={this.onDrop}>
                                     <div height="50px">Try dropping some files here, or click to select files to
                                         upload.

@@ -2,6 +2,12 @@
 
 // tag::vars[]
 const React = require('react');
+const block = {
+        display: 'block'
+      };
+const none = {
+        display: 'none'
+      };
 // end::vars[]
 
 // tag::message[]
@@ -9,22 +15,13 @@ class ContentViewer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.close=this.close.bind(this);
-        this.handleScroll=this.handleScroll.bind(this);
-    }
-
-    handleScroll(event) {
-        let zoom = document.getElementById('content').style.zoom;
-    }
-    
-    close() {
-        document.getElementById('content-viewer').style.display='none';
     }
     
     render() {
+        let style = this.props.content.visible ? block : none;
         return (
-            <div id="content-viewer" onScroll={this.handleScroll}>
-                <img id='content' src={this.props.contentSrc} onClick={this.close}/>
+            <div style={style} id="content-viewer">
+                <img id='content' src={this.props.content.src} onClick={this.props.onThumbClick}/>
             </div>
         )
     }

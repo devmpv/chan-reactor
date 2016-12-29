@@ -58,23 +58,21 @@ class ItemList extends React.Component {
 
     // tag::message-list-render[]
     render() {
-        let firstItem = this.props.items[0];
         let items;
-        if (firstItem) {
-            if (firstItem._links.board) {
-                items = this.props.items.map(item =>
-                    <ThreadPreview key={item._links.self.href} thread={item}
-                    onThumbClick={this.props.onThumbClick}
-                    onDelete={this.props.onDelete}/>
-                );
-            } else {
-                items = this.props.items.map(item =>
-                    <Message key={item._links.self.href} message={item} 
-                    onThumbClick={this.props.onThumbClick}
-                    onDelete={this.props.onDelete}/>
-                );
-            }
+        if (this.props.board) {
+            items = this.props.items.map(item =>
+                <ThreadPreview key={item._links.self.href} thread={item}
+                               onThumbClick={this.props.onThumbClick}
+                               onDelete={this.props.onDelete}/>
+            );
+        } else {
+            items = this.props.items.map(item =>
+                <Message key={item._links.self.href} message={item}
+                         onThumbClick={this.props.onThumbClick}
+                         onDelete={this.props.onDelete}/>
+            );
         }
+
 
         let navLinks = [];
         if ("first" in this.props.links) {

@@ -22,7 +22,7 @@ class Message extends React.Component {
 
     render() {
         let message = this.props.message;
-        let attachThumbs = this.props.message.attachments.map(attach => 
+        let attachThumbs = message.attachments.map(attach => 
             <span key={attach.name}>
                 <img id = {attach.name} src={thumbPath+attach.name} onClick={this.handleThumbClick} />
             </span>

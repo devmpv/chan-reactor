@@ -1,7 +1,13 @@
 package com.devmpv.model;
 
-import javax.persistence.*;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Thread extends Message {
@@ -26,12 +32,12 @@ public class Thread extends Message {
 		return board;
 	}
 
-	public void setBoard(Board board) {
-		this.board = board;
-	}
-
 	public Set<Message> getMessages() {
 		return messages;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 
 	public void setMessages(Set<Message> messages) {

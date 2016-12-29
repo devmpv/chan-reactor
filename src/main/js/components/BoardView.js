@@ -5,7 +5,6 @@ import ContentViewer from "./ContentViewer";
 const React = require('react');
 const client = require('../client');
 const follow = require('../follow');
-//const Link = require('react-router').Link;
 
 const srcPath = '/src/attach/';
 const root = '/rest/api';
@@ -19,7 +18,16 @@ class BoardView extends React.Component {
         searchRoot = searchRoot.concat('/threads/search/board');
         uri = '/'.concat(this.props.params.boardName);
 
-        this.state = {items: [], attributes: [], pageSize: 20, links: {}, contentSrc: "/img/redo.png"};
+        this.state = {
+            items: [],
+            attributes: [],
+            pageSize: 20,
+            links: {},
+            content: {
+                src: "/img/redo.png",
+                visible: false
+            }
+        }
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
@@ -71,14 +79,27 @@ class BoardView extends React.Component {
     }
 
     // end::delete[]
-    
-    // tag::delete[]
+
+    // tag::thumbClick[]
     onThumbClick(attachName) {
-        this.setState({contentSrc: srcPath + attachName});
-        document.getElementById('content-viewer').style.display='block';
+        if (this.state.content.visible) {
+            this.setState({
+                content: {
+                    src: "/img/redo.png",
+                    visible: false
+                }
+            });
+        } else {
+            this.setState({
+                content: {
+                    src: srcPath + attachName,
+                    visible: true
+                }
+            });
+        }
     }
 
-    // end::delete[]
+    // tag::thumbClick[]
 
     // tag::navigate[]
     onNavigate(navUri) {
@@ -116,15 +137,16 @@ class BoardView extends React.Component {
                 <a href="/">Home</a>
                 <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
-                <ItemList items={this.state.items}
+                <ItemList board="true"
+                          items={this.state.items}
                           links={this.state.links}
                           pageSize={this.state.pageSize}
                           onNavigate={this.onNavigate}
                           onDelete={this.onDelete}
                           onThumbClick={this.onThumbClick}
                           updatePageSize={this.updatePageSize}/>
-                <ContentViewer contentSrc={this.state.contentSrc}/>
-                </div>
+                <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
+            </div>
         )
     }
 }
