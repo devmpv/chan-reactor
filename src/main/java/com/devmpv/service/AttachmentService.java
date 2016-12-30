@@ -1,21 +1,14 @@
 package com.devmpv.service;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,7 +50,7 @@ public class AttachmentService {
 				Files.copy(value.getInputStream(), savedPath);
 			}
 			if (!Files.exists(thumbPath.resolve(savedName))) {
-				Thumbnails.of(value.getInputStream()).size(150, 150).toFile(thumbPath.resolve(savedName).toString());
+				Thumbnails.of(value.getInputStream()).size(200, 200).toFile(thumbPath.resolve(savedName).toString());
 			}
 			attach = new Attachment();
 			attach.setMd5(md5);
@@ -91,36 +84,6 @@ public class AttachmentService {
 			return filename.substring(dotIndex, filename.length());
 		} else {
 			return "";
-		}
-	}
-
-	private File getFile(Attachment attachment) {
-		return storagePath.resolve(attachment.getMd5()).toFile();
-	}
-
-	public Map<Attachment, File> getFileSet(Set<Attachment> attach) {
-		Map<Attachment, File> result = new HashMap<>();
-		attach.stream().filter(a -> Files.exists(storagePath.resolve(a.getMd5())))
-				.forEach(a -> result.put(a, getFile(a)));
-		return result;
-	}
-
-	public Resource loadAsResource(String filename) {
-		Path file = storagePath.resolve(filename);
-		Resource resource = null;
-		try {
-			resource = new UrlResource(file.toUri());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return resource;
-	}
-
-	public void store(MultipartFile file) {
-		try {
-			Files.copy(file.getInputStream(), this.storagePath.resolve(file.getOriginalFilename()));
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

@@ -148,11 +148,15 @@ class ThreadView extends React.Component {
     // end::follow-1[]
 
     render() {
+      let boardLink = '/'+this.props.params.boardName;
         return (
             <div>
-                <a href="/">Home</a>
+                <span><a href="/">Home</a></span>
+                <span><a href={boardLink}>{boardLink}</a></span>
+                <p/>
                 <CreateDialog attributes={this.state.attributes} threadId={this.props.params.threadId}
                               onCreate={this.onCreate}/>
+                <br></br>
                 {this.state.thread.attachments ? <Message message={this.state.thread} onThumbClick={this.onThumbClick}/> : <p/>}
                 {this.state.items && this.state.items.length > 0 ?
                     <ItemList board="false"

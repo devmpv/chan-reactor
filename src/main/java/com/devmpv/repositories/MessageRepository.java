@@ -15,6 +15,8 @@ import com.devmpv.model.Thread;
 
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
+	int countByThread(Thread board);
+
 	@RestResource(path = "thread", rel = "messages")
 	Page<?> findByThreadOrderByIdAsc(@Param("uri") Thread thread, Pageable page);
 

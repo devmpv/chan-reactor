@@ -7,12 +7,14 @@ import static com.devmpv.config.Const.TITLE;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +28,15 @@ import com.devmpv.repositories.ThreadRepository;
 
 @Service
 public class MessageService {
+
+	@Value("${chan.message.maxCount}")
+	private int messageMaxCount;
+
+	@Value("${chan.message.bumpLimit}")
+	private int messageBumpLimit;
+
+	@Value("${chan.thread.maxCount}")
+	private int threadMaxCount;
 
 	private ThreadRepository threadRepo;
 	private MessageRepository messageRepo;
@@ -65,9 +76,24 @@ public class MessageService {
 			Message message = new Message(params.get(TITLE)[0], params.get(TEXT)[0]);
 			message.setThread(thread);
 			saveAttachments(message, files);
+			int count = messageRepo.countByThread(thread);
+			if (count < messageBumpLimit) {
+				thread.setUpdated(message.getTimestamp());
+				threadRepo.save(thread);
+			}
+			if (count > messageMaxCount) {
+				throw new Exception("Thread limit exceeded!");
+			}
 			return messageRepo.save(message).getId();
 		} else {
 			Board board = boardRepo.findOne(params.get(BOARD)[0]);
+			int count = threadRepo.countByBoard(board);
+			if (count >= threadMaxCount) {
+				List<Thread> threads = threadRepo.findByBoardOrderByUpdatedAsc(board);
+				for (int i = 0; i < count - (threadMaxCount - 1); i++) {
+					threadRepo.delete(threads.get(i));
+				}
+			}
 			Thread thread = (Thread) saveAttachments(new Thread(board, params.get(TITLE)[0], params.get(TEXT)[0]),
 					files);
 			return threadRepo.save(thread).getId();

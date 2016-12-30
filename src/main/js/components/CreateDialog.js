@@ -37,6 +37,10 @@ class CreateDialog extends React.Component {
             window.alert('Text cannot be empty!');
             return;
         }
+        if (this.state.files.length > 4) {
+            window.alert('4 files maximum');
+            return;
+        }
         this.state.files.map(file => form.append(file.name, file));
 
         form.append('title', title);
@@ -65,23 +69,23 @@ class CreateDialog extends React.Component {
     render() {
         return (
             <div>
-                <a href="#message">Create</a>
+                <span><a href="#message">Create</a></span>
                 <div id="message" className="modalDialog">
                     <div>
-                        <a href="#" title="Close" className="close">X</a>
-                        <h2>Create new thread</h2>
+                        <a href="#" title="Close" className="close">x</a>
+                        <h3>Create new</h3>
                         <form>
                             <input type="text" placeholder="title"
-                                   ref="title" className="field"/>
-                            <div className="message-sticker-preview">
-                                <textarea name="text" rows="6" wrap="soft" placeholder="Message text"
+                                   ref="title" className="comment-title"/>
+                            <div>
+                                <textarea name="text" rows="6" placeholder="Message text"
                                           ref="text"
-                                          className="qcomment">
+                                          className="comment-text">
                                 </textarea>
                             </div>
                             <div>
-                                <Dropzone onDrop={this.onDrop}>
-                                    <div height="50px">Try dropping some files here, or click to select files to
+                                <Dropzone onDrop={this.onDrop} maxSize={1048576} accept="image/*">
+                                    <div>Try dropping some files here, or click to select files to
                                         upload.
                                     </div>
                                 </Dropzone>

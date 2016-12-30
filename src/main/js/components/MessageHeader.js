@@ -17,7 +17,7 @@ class MessageHeader extends React.Component {
     handleDelete() {
         this.props.onDelete(this.props.message);
     }
-
+/*<button onClick={this.handleDelete}>Delete</button>*/
     render() {
         let date = (new Date(this.props.message.timestamp)).toLocaleString();
         let replyHref = path.concat(this.props.message.id);
@@ -29,10 +29,8 @@ class MessageHeader extends React.Component {
                 <span>{date}</span>
                 <span>Id: {this.props.message.id}</span>
                 <span>
-					<button onClick={this.handleDelete}>Delete</button>
 				</span>
                 <span>
-					<button>Hide</button>
 				</span>
                 <span>
 					<a href={replyHref}>Reply</a>

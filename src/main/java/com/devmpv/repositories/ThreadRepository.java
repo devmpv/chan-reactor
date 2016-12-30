@@ -1,5 +1,7 @@
 package com.devmpv.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -13,6 +15,10 @@ import com.devmpv.model.Thread;
 
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface ThreadRepository extends PagingAndSortingRepository<Thread, Long> {
+	int countByBoard(Board board);
+
+	List<Thread> findByBoardOrderByUpdatedAsc(Board board);
+
 	@RestResource(path = "board", rel = "threads")
 	Page<?> findByBoardOrderByUpdatedDesc(@Param("uri") Board board, Pageable page);
 }
