@@ -25,8 +25,15 @@ public class DatabaseLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... strings) throws Exception {
-		Board b = this.boardRepo.save(new Board("b", "Anything"));
-		Board po = this.boardRepo.save(new Board("po", "Politics"));
+		if (!boardRepo.exists("b")) {
+			Board b = this.boardRepo.save(new Board("b", "Anything"));
+		}
+		if (!boardRepo.exists("po")) {
+			Board po = this.boardRepo.save(new Board("po", "Politics"));
+		}
+		if (!boardRepo.exists("g")) {
+			Board po = this.boardRepo.save(new Board("g", "Girls"));
+		}
 		/*
 		 * for (int i = 0; i < 25; i++) { Thread thread =
 		 * this.threadRepo.save(new Thread(b, format("B thread %d", i),

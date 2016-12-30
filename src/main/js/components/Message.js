@@ -15,21 +15,21 @@ class Message extends React.Component {
         super(props);
         this.handleThumbClick = this.handleThumbClick.bind(this);
     }
-    
+
     handleThumbClick(event){
         this.props.onThumbClick(event.target.id);
     }
 
     render() {
         let message = this.props.message;
-        let attachThumbs = message.attachments.map(attach => 
+        let attachThumbs = message.attachments.map(attach =>
             <span key={attach.name}>
                 <img id = {attach.name} src={thumbPath+attach.name} onClick={this.handleThumbClick} />
             </span>
         );
         return (
             <div className="message">
-                <MessageHeader message={message} onDelete={this.props.onDelete}/>
+                <MessageHeader message={message} threadView={this.props.threadView} onDelete={this.props.onDelete}/>
                 {attachThumbs}
                 <blockquote className="message-text">{message.text}</blockquote>
             </div>

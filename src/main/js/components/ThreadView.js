@@ -157,9 +157,9 @@ class ThreadView extends React.Component {
                 <CreateDialog attributes={this.state.attributes} threadId={this.props.params.threadId}
                               onCreate={this.onCreate}/>
                 <br></br>
-                {this.state.thread.attachments ? <Message message={this.state.thread} onThumbClick={this.onThumbClick}/> : <p/>}
+                {this.state.thread.attachments ? <Message message={this.state.thread} threadView={true} onThumbClick={this.onThumbClick}/> : <p/>}
                 {this.state.items && this.state.items.length > 0 ?
-                    <ItemList board="false"
+                    <ItemList board={false}
                               items={this.state.items}
                               links={this.state.links}
                               pageSize={this.state.pageSize}

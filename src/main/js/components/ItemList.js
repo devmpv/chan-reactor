@@ -68,6 +68,7 @@ class ItemList extends React.Component {
         } else {
             items = this.props.items.map(item =>
                 <Message key={item._links.self.href} message={item}
+                         threadView={true}
                          onThumbClick={this.props.onThumbClick}
                          onDelete={this.props.onDelete}/>
             );
