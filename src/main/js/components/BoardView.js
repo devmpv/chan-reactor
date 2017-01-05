@@ -133,19 +133,22 @@ class BoardView extends React.Component {
     // end::follow-1[]
 
     render() {
+        let params = {
+            board: true,
+            items: this.state.items,
+            links: this.state.links,
+            pageSize: this.state.pageSize,
+            onNavigate: this.onNavigate,
+            onDelete: this.onDelete,
+            onThumbClick: this.onThumbClick,
+            updatePageSize:this.updatePageSize
+        };
         return (
             <div onClick={this.onBlankClick}>
                 <a href="/">Home</a>
                 <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
-                {this.state.items ? <ItemList board="true"
-                          items={this.state.items}
-                          links={this.state.links}
-                          pageSize={this.state.pageSize}
-                          onNavigate={this.onNavigate}
-                          onDelete={this.onDelete}
-                          onThumbClick={this.onThumbClick}
-                          updatePageSize={this.updatePageSize}/>
+                {this.state.items ? <ItemList params={params}/>
                         : null}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
             </div>

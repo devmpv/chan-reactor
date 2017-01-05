@@ -1,23 +1,31 @@
+// @flow
+
 'use strict';
 
 import MessageHeader from "./MessageHeader";
 
-// tag::vars[]
 const React = require('react');
 const srcPath = '/src/attach/';
 const thumbPath = srcPath+'thumbs/';
-// end::vars[]
 
-// tag::message[]
-class Message extends React.Component {
+export type Msg = {type: 'msg', attachments: Attachment[], text: string}
+export type Attachment = {type: 'attachment', name: string}
 
-    constructor(props) {
-        super(props);
-        this.handleThumbClick = this.handleThumbClick.bind(this);
-    }
+type Props = {
+  onThumbClick: () => void,
+  onDelete: () => void,
+  message: Msg,
+  board: boolean
+}
 
-    handleThumbClick(event){
-        this.props.onThumbClick(event.target.id);
+class Message extends React.Component<void, Props, void> {
+    handleThumbClick: (event: SyntheticInputEvent)=>void;
+    constructor(props: Props) {
+      super(props);
+
+      this.handleThumbClick = (event: SyntheticInputEvent) => {
+          this.props.onThumbClick(event.target.id);
+      }
     }
 
     render() {
@@ -29,13 +37,12 @@ class Message extends React.Component {
         );
         return (
             <div className="message">
-                <MessageHeader message={message} threadView={this.props.threadView} onDelete={this.props.onDelete}/>
+                <MessageHeader message={message} board={this.props.board} onDelete={this.props.onDelete}/>
                 {attachThumbs}
                 <blockquote className="message-text">{message.text}</blockquote>
             </div>
         )
     }
 }
-// end::message[]
 
 export default Message;

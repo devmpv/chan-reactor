@@ -1,16 +1,33 @@
+// @flow
+
 'use strict';
 
 import ThreadPreview from "./ThreadPreview";
 import Message from "./Message";
 
-// tag::vars[]
 const React = require('react');
-const ReactDOM = require('react-dom');
-// end::vars[]
+
+/*type Props = {
+  onThumbClick: ()=>null,
+  onDelete: ()=>null,
+  onNavigate: ()=>null,
+  updatePageSize: ()=>null,
+  pageSize: number,
+  links: [],
+  items: [],
+  threadView: {},
+  board: boolean
+}*/
+type Props = {params: {}}
 
 class ItemList extends React.Component {
+    handleNavFirst: Function;
+    handleNavPrev: Function;
+    handleNavNext: Function;
+    handleNavLast: Function;
+    handleInput: Function;
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         this.handleNavFirst = this.handleNavFirst.bind(this);
         this.handleNavPrev = this.handleNavPrev.bind(this);
@@ -20,13 +37,13 @@ class ItemList extends React.Component {
     }
 
     // tag::handle-page-size-updates[]
-    handleInput(e) {
+    handleInput(e: SyntheticInputEvent) {
         e.preventDefault();
-        let pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
+        let pageSize = this.refs.pageSize.value;
         if (/^[0-9]+$/.test(pageSize)) {
             this.props.updatePageSize(pageSize);
         } else {
-            ReactDOM.findDOMNode(this.refs.pageSize).value =
+            this.refs.pageSize.value =
                 pageSize.substring(0, pageSize.length - 1);
         }
     }
@@ -34,22 +51,22 @@ class ItemList extends React.Component {
     // end::handle-page-size-updates[]
 
     // tag::handle-nav[]
-    handleNavFirst(e) {
+    handleNavFirst(e: SyntheticInputEvent) {
         e.preventDefault();
         this.props.onNavigate(this.props.links.first.href);
     }
 
-    handleNavPrev(e) {
+    handleNavPrev(e: SyntheticInputEvent) {
         e.preventDefault();
         this.props.onNavigate(this.props.links.prev.href);
     }
 
-    handleNavNext(e) {
+    handleNavNext(e: SyntheticInputEvent) {
         e.preventDefault();
         this.props.onNavigate(this.props.links.next.href);
     }
 
-    handleNavLast(e) {
+    handleNavLast(e: SyntheticInputEvent) {
         e.preventDefault();
         this.props.onNavigate(this.props.links.last.href);
     }
@@ -59,33 +76,33 @@ class ItemList extends React.Component {
     // tag::message-list-render[]
     render() {
         let items;
-        if (this.props.board) {
-            items = this.props.items.map(item =>
+        if (this.props.params.board) {
+            items = this.props.params.items.map(item =>
                 <ThreadPreview key={item._links.self.href} thread={item}
-                               onThumbClick={this.props.onThumbClick}
-                               onDelete={this.props.onDelete}/>
+                               onThumbClick={this.props.params.onThumbClick}
+                               onDelete={this.props.params.onDelete}/>
             );
         } else {
-            items = this.props.items.map(item =>
+            items = this.props.params.items.map(item =>
                 <Message key={item._links.self.href} message={item}
-                         threadView={true}
-                         onThumbClick={this.props.onThumbClick}
-                         onDelete={this.props.onDelete}/>
+                         board={this.props.params.board}
+                         onThumbClick={this.props.params.onThumbClick}
+                         onDelete={this.props.params.onDelete}/>
             );
         }
 
 
         let navLinks = [];
-        if ("first" in this.props.links) {
+        if ("first" in this.props.params.links) {
             navLinks.push(<button key="first" onClick={this.handleNavFirst}>&lt;&lt;</button>);
         }
-        if ("prev" in this.props.links) {
+        if ("prev" in this.props.params.links) {
             navLinks.push(<button key="prev" onClick={this.handleNavPrev}>&lt;</button>);
         }
-        if ("next" in this.props.links) {
+        if ("next" in this.props.params.links) {
             navLinks.push(<button key="next" onClick={this.handleNavNext}>&gt;</button>);
         }
-        if ("last" in this.props.links) {
+        if ("last" in this.props.params.links) {
             navLinks.push(<button key="last" onClick={this.handleNavLast}>&gt;&gt;</button>);
         }
 
@@ -95,12 +112,10 @@ class ItemList extends React.Component {
                 <div>
                     {navLinks}
                 </div>
-                <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
+                <input ref="pageSize" defaultValue={this.props.params.pageSize} onInput={this.handleInput}/>
             </div>
         )
     }
-
-    // end::message-list-render[]
 }
 
 export default ItemList;

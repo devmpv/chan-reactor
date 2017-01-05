@@ -1,3 +1,5 @@
+'use strict'
+
 import CreateDialog from "./CreateDialog";
 import ItemList from "./ItemList";
 import Message from "./Message";
@@ -148,6 +150,14 @@ class ThreadView extends React.Component {
     // end::follow-1[]
 
     render() {
+      let params = {board: false,
+                items: this.state.items,
+                links: this.state.links,
+                pageSize: this.state.pageSize,
+                onNavigate: this.onNavigate,
+                onDelete: this.onDelete,
+                onThumbClick: this.onThumbClick,
+                updatePageSize: this.updatePageSize};
       let boardLink = '/'+this.props.params.boardName;
         return (
             <div>
@@ -157,16 +167,9 @@ class ThreadView extends React.Component {
                 <CreateDialog attributes={this.state.attributes} threadId={this.props.params.threadId}
                               onCreate={this.onCreate}/>
                 <br></br>
-                {this.state.thread.attachments ? <Message message={this.state.thread} threadView={true} onThumbClick={this.onThumbClick}/> : <p/>}
+                {this.state.thread.attachments ? <Message message={this.state.thread} board={false} onThumbClick={this.onThumbClick}/> : <p/>}
                 {this.state.items && this.state.items.length > 0 ?
-                    <ItemList board={false}
-                              items={this.state.items}
-                              links={this.state.links}
-                              pageSize={this.state.pageSize}
-                              onNavigate={this.onNavigate}
-                              onDelete={this.onDelete}
-                              onThumbClick={this.onThumbClick}
-                              updatePageSize={this.updatePageSize}/>
+                    <ItemList params={params}/>
                 : <p/>}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
             </div>

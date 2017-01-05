@@ -18,7 +18,7 @@ class ThreadPreview extends React.Component {
             <div className="panel">
                 <Message message={this.props.thread}
                 onThumbClick={this.props.onThumbClick}
-                threadView={false}
+                board={true}
                 onDelete={this.props.onDelete}/>
             </div>
         )

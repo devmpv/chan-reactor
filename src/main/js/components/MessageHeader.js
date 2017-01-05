@@ -20,7 +20,7 @@ class MessageHeader extends React.Component {
 /*<button onClick={this.handleDelete}>Delete</button>*/
     render() {
         let date = (new Date(this.props.message.timestamp)).toLocaleString();
-        let replyHref = this.props.threadView !== true ?	path.concat(this.props.message.id) : '#message';
+        let replyHref = this.props.board == true ?	path.concat(this.props.message.id) : '#message';
         return (
             <div className="message-header">
                 <span><input type="checkbox" name="delete"/></span>
