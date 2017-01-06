@@ -7,17 +7,6 @@ import Message from "./Message";
 
 const React = require('react');
 
-/*type Props = {
-  onThumbClick: ()=>null,
-  onDelete: ()=>null,
-  onNavigate: ()=>null,
-  updatePageSize: ()=>null,
-  pageSize: number,
-  links: [],
-  items: [],
-  threadView: {},
-  board: boolean
-}*/
 type Props = {params: {}}
 
 class ItemList extends React.Component {
@@ -41,7 +30,7 @@ class ItemList extends React.Component {
         e.preventDefault();
         let pageSize = this.refs.pageSize.value;
         if (/^[0-9]+$/.test(pageSize)) {
-            this.props.updatePageSize(pageSize);
+            this.props.params.updatePageSize(pageSize);
         } else {
             this.refs.pageSize.value =
                 pageSize.substring(0, pageSize.length - 1);

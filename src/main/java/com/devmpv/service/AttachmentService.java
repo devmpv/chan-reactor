@@ -14,7 +14,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devmpv.model.Attachment;
-import com.devmpv.repositories.AttachmentRepo;
+import com.devmpv.repositories.AttachmentRepository;
 
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -24,10 +24,10 @@ public class AttachmentService {
 
 	private Path storagePath;
 	private Path thumbPath;
-	private AttachmentRepo repo;
+	private AttachmentRepository repo;
 
 	@Autowired
-	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepo repo) throws Exception {
+	public AttachmentService(@Value("${chan.file.path}") String filestorage, AttachmentRepository repo) throws Exception {
 		this.repo = repo;
 		this.storagePath = Paths.get(filestorage.replaceFirst("^~", System.getProperty("user.home")));
 		this.thumbPath = storagePath.resolve("thumbs");
@@ -75,6 +75,15 @@ public class AttachmentService {
 				LOG.error(String.format("Unable to create directory [%s]", path.toString()), e);
 				throw e;
 			}
+		}
+	}
+
+	public void cleanup(Attachment attachment) {
+		try {
+			Files.delete(storagePath.resolve(attachment.getName()));
+			Files.delete(thumbPath.resolve(attachment.getName()));
+		} catch (IOException e) {
+			LOG.error("Error while deleting attachment image!", e);
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +17,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.devmpv.repositories.eventListeners.MessageEntityListener;
+
 @Entity
+@EntityListeners(MessageEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Message {
 	@Id

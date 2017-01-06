@@ -50,7 +50,6 @@ class ThreadView extends React.Component {
         });
     }
 
-    // tag::follow-2[]
     loadFromServer(pageSize) {
         this.getOPMessage();
         client({
@@ -69,9 +68,6 @@ class ThreadView extends React.Component {
         });
     }
 
-    // end::follow-2[]
-
-    // tag::create[]
     onCreate(form) {
       const request = {
               method: 'POST',
@@ -87,18 +83,12 @@ class ThreadView extends React.Component {
         });
     }
 
-    // end::create[]
-
-    // tag::delete[]
     onDelete(thread) {
         client({method: 'DELETE', path: thread._links.self.href}).done(() => {
             this.loadFromServer(this.state.pageSize);
         });
     }
 
-    // end::delete[]
-
-    // tag::thumbClick[]
     onThumbClick(attachName) {
         if (this.state.content.visible) {
             this.setState({
@@ -117,9 +107,6 @@ class ThreadView extends React.Component {
         }
     }
 
-    // tag::thumbClick[]
-
-    // tag::navigate[]
     onNavigate(navUri) {
         client({method: 'GET', path: navUri}).done(threadCollection => {
             this.setState({
@@ -131,26 +118,18 @@ class ThreadView extends React.Component {
         });
     }
 
-    // end::navigate[]
-
-    // tag::update-page-size[]
     updatePageSize(pageSize) {
         if (pageSize !== this.state.pageSize) {
             this.loadFromServer(pageSize);
         }
     }
 
-    // end::update-page-size[]
-
-    // tag::follow-1[]
     componentDidMount() {
         this.loadFromServer(this.state.pageSize);
     }
 
-    // end::follow-1[]
-
     render() {
-      let params = {board: false,
+        let params = {board: false,
                 items: this.state.items,
                 links: this.state.links,
                 pageSize: this.state.pageSize,
@@ -158,7 +137,7 @@ class ThreadView extends React.Component {
                 onDelete: this.onDelete,
                 onThumbClick: this.onThumbClick,
                 updatePageSize: this.updatePageSize};
-      let boardLink = '/'+this.props.params.boardName;
+        let boardLink = '/'+this.props.params.boardName;
         return (
             <div>
                 <span><a href="/">Home</a></span>

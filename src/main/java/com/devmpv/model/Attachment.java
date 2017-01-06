@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,9 +12,11 @@ import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.devmpv.repositories.eventListeners.AttachmentEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@EntityListeners(AttachmentEntityListener.class)
 @Table(indexes = { @Index(columnList = "md5", unique = true) })
 public class Attachment {
 	@Id
@@ -34,6 +37,10 @@ public class Attachment {
 
 	public String getMd5() {
 		return md5;
+	}
+
+	public Set<Message> getMessages() {
+		return messages;
 	}
 
 	public String getName() {

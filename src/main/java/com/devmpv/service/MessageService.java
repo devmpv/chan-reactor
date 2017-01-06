@@ -81,7 +81,7 @@ public class MessageService {
 				thread.setUpdated(message.getTimestamp());
 				threadRepo.save(thread);
 			}
-			if (count > messageMaxCount) {
+			if (count >= messageMaxCount) {
 				throw new Exception("Thread limit exceeded!");
 			}
 			return messageRepo.save(message).getId();
