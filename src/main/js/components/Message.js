@@ -32,15 +32,17 @@ class Message extends React.Component<void, Props, void> {
         let message = this.props.message;
         let attachThumbs = message.attachments.map(attach =>
             <span key={attach.name}>
-                <img id = {attach.name} src={thumbPath+attach.name} onClick={this.handleThumbClick} />
+                <img id={attach.name} src={thumbPath+attach.name} onClick={this.handleThumbClick} />
             </span>
         );
         return (
-            <div className="message">
-                <MessageHeader message={message} board={this.props.board} onDelete={this.props.onDelete}/>
-                {attachThumbs}
-                <blockquote className="message-text">{message.text}</blockquote>
-            </div>
+          <div className="post-wrapper">
+              <div className="message">
+                  <MessageHeader message={message} board={this.props.board} onDelete={this.props.onDelete}/>
+                  {attachThumbs}
+                  <blockquote className="message-text">{message.text}</blockquote>
+              </div>
+          </div>
         )
     }
 }

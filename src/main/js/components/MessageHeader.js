@@ -22,12 +22,12 @@ class MessageHeader extends React.Component {
         let date = (new Date(this.props.message.timestamp)).toLocaleString();
         let replyHref = this.props.board == true ?	path.concat(this.props.message.id) : '#message';
         return (
-            <div className="message-header">
+            <div className="header">
                 <span><input type="checkbox" name="delete"/></span>
                 <span className="message-title">{this.props.message.title}</span>
                 <span>Anonymous</span>
                 <span>{date}</span>
-                <span>Id: {this.props.message.id}</span>
+                <span><a name={this.props.message.id} href={'#'+this.props.message.id}>{'#'+this.props.message.id}</a></span>
                 <span>
 				</span>
                 <span>

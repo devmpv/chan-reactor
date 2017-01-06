@@ -144,10 +144,12 @@ class BoardView extends React.Component {
             updatePageSize:this.updatePageSize
         };
         return (
-            <div onClick={this.onBlankClick}>
-                <a href="/">Home</a>
+            <div>
+                <span><a href="/">Home</a></span>
+                <p/>
                 <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
+                <p/>
                 {this.state.items ? <ItemList params={params}/>
                         : null}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>

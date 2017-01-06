@@ -17,6 +17,12 @@ td, td img {vertical-align: top;}
 
 span {padding: 5px}
 /*Various classes*/
+.create-href{
+  text-align: center;
+  border-style: dashed;
+  border-width: thin;
+  padding: 3px;
+}
 
 .comment-title {
   width: 100%;
@@ -25,10 +31,30 @@ span {padding: 5px}
   width: 100%
 }
 
+.post-wrapper {
+    margin: 4px 0 4px 0px;
+    overflow: visible;
+    word-wrap: break-word;
+}
+
+.message {
+	display: inline-block;
+	min-width: 26.4em;
+	max-width: 100%;
+	background: #DDDDDD;
+	border: solid 1px #CCCCCC;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+}
+.message .header{
+  margin-bottom: 4px;
+}
+
 .panel {
     padding-top: 0.0rem;
     padding-bottom: 0.3rem;
-}
+}/*
 .message {	padding: 1px 3px 3px;margin: 0;}
 .message .message-header {margin-bottom: 2px;}
 .message .message-title{background:inherit;font-size:1em;	color:#002244;font-weight:bold;}
@@ -45,7 +71,7 @@ span {padding: 5px}
 .message .webm-file {	border: 1px dashed #818181;}
 .message .close-webm {padding-left: 3px;}
 .message .message-text {overflow: auto;}
-.message.reply .message-text {  max-height: 600px;}
+.message.reply .message-text {  max-height: 600px;}*/
 
 #content-viewer {
 	position: fixed;
