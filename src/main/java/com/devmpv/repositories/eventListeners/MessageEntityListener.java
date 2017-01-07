@@ -25,7 +25,7 @@ public class MessageEntityListener {
 	@PreRemove
 	public void onPreRemove(Message message) {
 		message.getAttachments().forEach(attach -> {
-			if (attach.getMessages().size() == 1) {
+			if (attachRepo.countMessages(attach.getId()) == 1) {
 				attachRepo.delete(attach);
 			}
 		});

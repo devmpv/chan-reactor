@@ -12,16 +12,19 @@ const none = {
 
 // tag::message[]
 class ContentViewer extends React.Component {
-
+    handleThumbClick: (event: SyntheticInputEvent)=>void;
     constructor(props) {
         super(props);
+        this.handleThumbClick = (event: SyntheticInputEvent) => {
+            this.props.onThumbClick('');
+        }
     }
 
     render() {
         let style = this.props.content.visible ? block : none;
         return (
             <div style={style} id="content-viewer">
-                <img id='content' src={this.props.content.src} onClick={this.props.onThumbClick}/>
+                <img id='content' src={this.props.content.src} onClick={this.handleThumbClick}/>
             </div>
         )
     }

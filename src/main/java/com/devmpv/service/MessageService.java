@@ -38,19 +38,14 @@ public class MessageService {
 	@Value("${chan.thread.maxCount}")
 	private int threadMaxCount;
 
-	private ThreadRepository threadRepo;
-	private MessageRepository messageRepo;
-	private BoardRepository boardRepo;
-	private AttachmentService attachmentService;
-
 	@Autowired
-	public MessageService(ThreadRepository threadRepository, MessageRepository messageRepository,
-			BoardRepository boardRepository, AttachmentService attachmentService) {
-		this.messageRepo = messageRepository;
-		this.threadRepo = threadRepository;
-		this.boardRepo = boardRepository;
-		this.attachmentService = attachmentService;
-	}
+	private ThreadRepository threadRepo;
+	@Autowired
+	private MessageRepository messageRepo;
+	@Autowired
+	private BoardRepository boardRepo;
+	@Autowired
+	private AttachmentService attachmentService;
 
 	private Message saveAttachments(Message message, Map<String, MultipartFile> files) throws Exception {
 		Set<Attachment> result = new HashSet<>();
@@ -76,7 +71,7 @@ public class MessageService {
 			Message message = new Message(params.get(TITLE)[0], params.get(TEXT)[0]);
 			message.setThread(thread);
 			saveAttachments(message, files);
-			int count = messageRepo.countByThread(thread);
+			long count = messageRepo.countByThreadId(thread.getId());
 			if (count < messageBumpLimit) {
 				thread.setUpdated(message.getTimestamp());
 				threadRepo.save(thread);
@@ -87,7 +82,7 @@ public class MessageService {
 			return messageRepo.save(message).getId();
 		} else {
 			Board board = boardRepo.findOne(params.get(BOARD)[0]);
-			int count = threadRepo.countByBoard(board);
+			long count = threadRepo.countByBoard(board);
 			if (count >= threadMaxCount) {
 				List<Thread> threads = threadRepo.findByBoardOrderByUpdatedAsc(board);
 				for (int i = 0; i < count - (threadMaxCount - 1); i++) {

@@ -23,7 +23,6 @@ class MessageHeader extends React.Component {
         let replyHref = this.props.board == true ?	path.concat(this.props.message.id) : '#message';
         return (
             <div className="header">
-                <span><input type="checkbox" name="delete"/></span>
                 <span className="message-title">{this.props.message.title}</span>
                 <span>Anonymous</span>
                 <span>{date}</span>
@@ -33,7 +32,7 @@ class MessageHeader extends React.Component {
                 <span>
 				</span>
                 <span>
-				<a href={replyHref}>Reply</a>
+				{this.props.board == true ? <a href={replyHref}>Open</a> : <a href={replyHref}>Reply</a>}
 				</span>
             </div>
         )

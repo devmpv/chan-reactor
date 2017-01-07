@@ -10,15 +10,14 @@ const client = require('../client');
 
 const root = '/rest/api';
 const srcPath = '/src/attach/';
-let searchRoot = root;
-let uri = '';
+const submitPath = root + '/res/submit';
+let searchRoot = root + '/messages/search/thread';
 
 class ThreadView extends React.Component {
 
     constructor(props) {
         super(props);
-        searchRoot = searchRoot.concat('/messages/search/thread');
-        uri = 'threads/'.concat(this.props.params.threadId);
+        //searchRoot = searchRoot.concat('/messages/search/thread');
         this.state = {
             empty: true,
             thread: {},
@@ -55,15 +54,15 @@ class ThreadView extends React.Component {
         client({
             method: 'GET', path: searchRoot, params: {
                 size: pageSize,
-                uri: uri
+                id: this.props.params.threadId
             }
-        }).done(threadCollection => {
+        }).done(messages => {
             this.setState({
                 empty: false,
-                items: threadCollection.entity._embedded['messages'],
+                items: messages.entity._embedded['messages'],
                 attributes: ['title', 'text'],
                 pageSize: pageSize,
-                links: threadCollection.entity._links
+                links: messages.entity._links
             });
         });
     }
@@ -71,7 +70,7 @@ class ThreadView extends React.Component {
     onCreate(form) {
       const request = {
               method: 'POST',
-              path: '/res/submit',
+              path: submitPath,
               entity: form,
               headers: {
                   'Content-Type': 'multipart/form-data'
@@ -90,21 +89,21 @@ class ThreadView extends React.Component {
     }
 
     onThumbClick(attachName) {
+      let visible = this.state.content.visible;
+      let src = srcPath+attachName;
         if (this.state.content.visible) {
-            this.setState({
-                content: {
-                    src: "/img/redo.png",
-                    visible: false
-                }
-            });
-        } else {
-            this.setState({
-                content: {
-                    src: srcPath + attachName,
-                    visible: true
-                }
-            });
+          if (this.state.content.src === src || attachName === '') {
+              visible = false;
+          }
+        }else {
+          visible = true;
         }
+        this.setState({
+            content: {
+                src: src,
+                visible: visible
+            }
+        });
     }
 
     onNavigate(navUri) {

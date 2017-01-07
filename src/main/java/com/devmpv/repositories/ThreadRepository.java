@@ -15,7 +15,7 @@ import com.devmpv.model.Thread;
 
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface ThreadRepository extends PagingAndSortingRepository<Thread, Long> {
-	int countByBoard(Board board);
+	long countByBoard(Board board);
 
 	List<Thread> findByBoardOrderByUpdatedAsc(Board board);
 

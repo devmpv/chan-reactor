@@ -7,6 +7,7 @@ const client = require('../client');
 
 const srcPath = '/src/attach/';
 const root = '/rest/api';
+const submitPath = root + '/res/submit';
 let searchRoot = root;
 let uri = '';
 
@@ -34,7 +35,6 @@ class BoardView extends React.Component {
         this.onNavigate = this.onNavigate.bind(this);
     }
 
-    // tag::follow-2[]
     loadFromServer(pageSize) {
         client({
             method: 'GET', path: searchRoot, params: {
@@ -52,13 +52,10 @@ class BoardView extends React.Component {
         });
     }
 
-    // end::follow-2[]
-
-    // tag::create[]
     onCreate(form) {
       const request = {
               method: 'POST',
-              path: '/res/submit',
+              path: submitPath,
               entity: form,
               headers: {
                   'Content-Type': 'multipart/form-data'
@@ -70,39 +67,31 @@ class BoardView extends React.Component {
         });
     }
 
-    // end::create[]
-
-    // tag::delete[]
     onDelete(thread) {
         client({method: 'DELETE', path: thread._links.self.href}).done(() => {
             this.loadFromServer(this.state.pageSize);
         });
     }
 
-    // end::delete[]
-
-    // tag::thumbClick[]
     onThumbClick(attachName) {
+      let visible = this.state.content.visible;
+      let src = srcPath+attachName;
         if (this.state.content.visible) {
-            this.setState({
-                content: {
-                    src: "/img/redo.png",
-                    visible: false
-                }
-            });
-        } else {
-            this.setState({
-                content: {
-                    src: srcPath + attachName,
-                    visible: true
-                }
-            });
+          if (this.state.content.src === src || attachName === '') {
+              visible = false;
+              src = "/img/redo.png";
+          }
+        }else {
+          visible = true;
         }
+        this.setState({
+            content: {
+                src: src,
+                visible: visible
+            }
+        });
     }
 
-    // tag::thumbClick[]
-
-    // tag::navigate[]
     onNavigate(navUri) {
         client({method: 'GET', path: navUri}).done(threadCollection => {
             this.setState({
@@ -114,23 +103,15 @@ class BoardView extends React.Component {
         });
     }
 
-    // end::navigate[]
-
-    // tag::update-page-size[]
     updatePageSize(pageSize) {
         if (pageSize !== this.state.pageSize) {
             this.loadFromServer(pageSize);
         }
     }
 
-    // end::update-page-size[]
-
-    // tag::follow-1[]
     componentDidMount() {
         this.loadFromServer(this.state.pageSize);
     }
-
-    // end::follow-1[]
 
     render() {
         let params = {

@@ -50,28 +50,12 @@ span {padding: 5px}
 .message .header{
   margin-bottom: 4px;
 }
+.message .message-title{background:inherit;font-size:1em;	color:#002244;font-weight:bold;}
 
 .panel {
-    padding-top: 0.0rem;
+    margin-left: 20px;
     padding-bottom: 0.3rem;
-}/*
-.message {	padding: 1px 3px 3px;margin: 0;}
-.message .message-header {margin-bottom: 2px;}
-.message .message-title{background:inherit;font-size:1em;	color:#002244;font-weight:bold;}
-.message .image { margin: 0 17px;}
-.message .images-multi .image {display: inline-block;}
-.message .images-single + blockquote {margin: 0 35px 15px;}
-.message .images .nsfw {opacity:0.05}
-.message .images .nsfw:hover {opacity:1}
-.message .images .image-link a {float: left;margin: 0 15px 0 0;}
-.message .images-single-exp {display: table;}
-.message .file-attr {text-decoration:none;	color:#666666;	font-size:.8em;}
-.message .file-attr .filesize {display: block;	font-size: 0.9em;}
-.message .file-attr .file-notice {font-size: 0.9em; font-style: italic; margin-left: 10px;}
-.message .webm-file {	border: 1px dashed #818181;}
-.message .close-webm {padding-left: 3px;}
-.message .message-text {overflow: auto;}
-.message.reply .message-text {  max-height: 600px;}*/
+}
 
 #content-viewer {
 	position: fixed;

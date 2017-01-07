@@ -11,14 +11,15 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.devmpv.model.Message;
 import com.devmpv.model.Projections.InlineAttachments;
-import com.devmpv.model.Thread;
 
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
-	int countByThread(Thread board);
+	@RestResource(path = "count", rel = "messages")
+	Long countByThreadId(@Param("id") Long id);
 
 	@RestResource(path = "thread", rel = "messages")
-	Page<?> findByThreadOrderByIdAsc(@Param("uri") Thread thread, Pageable page);
+	Page<?> findByThreadIdOrderByIdAsc(@Param("id") Long id, Pageable page);
 
-	List<Message> findTop5ByThreadOrderByUpdatedDesc(Thread thread);
+	@RestResource(path = "preview", rel = "messages")
+	List<Message> findTop3ByThreadIdOrderByIdDesc(@Param("id") Long id);
 }
