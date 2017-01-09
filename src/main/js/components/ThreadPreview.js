@@ -6,6 +6,7 @@ const React = require('react');
 const client = require('../client');
 const previewPath = '/rest/api/messages/search/preview';
 const countPath = '/rest/api/messages/search/count';
+const currentUrl = window.location.pathname.concat("/thread/");
 
 class ThreadPreview extends React.Component {
 
@@ -42,25 +43,32 @@ class ThreadPreview extends React.Component {
 
     render() {
         let replies = this.state.messages.map(message=>
-            <Message key={message.id} message={message}
-            onThumbClick={this.props.onThumbClick}
-            board={false}
-            onDelete={this.props.onDelete}/>
+            <div key={message.id}>
+                <Message message={message}
+                    onThumbClick={this.props.onThumbClick}
+                    board={true}
+                    onDelete={this.props.onDelete}/>
+            </div>
         );
+        let count = this.state.count-this.state.messages.length;
         return (
             <div>
-                <Message message={this.props.thread}
-                onThumbClick={this.props.onThumbClick}
-                board={true}
-                onDelete={this.props.onDelete}/>
-                <div>Replies: {this.state.count}</div>
+                <div className="post-wrapper">
+                    <Message message={this.props.thread}
+                        onThumbClick={this.props.onThumbClick}
+                        board={true}
+                        onDelete={this.props.onDelete}/>
+                    <div>
+                        [<a href={currentUrl.concat(this.props.thread.id)}>Open</a>]
+                    </div>
+                </div>
                 <div className="panel">
-                  {replies}
+                    {count > 0 ? <div>Hidden replies: {count}</div> : null}
+                    {replies}
                 </div>
             </div>
         )
     }
 }
-// end::message[]
 
 export default ThreadPreview;

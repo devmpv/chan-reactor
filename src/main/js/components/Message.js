@@ -36,13 +36,15 @@ class Message extends React.Component<void, Props, void> {
             </span>
         );
         return (
-          <div className="post-wrapper">
-              <div className="message">
-                  <MessageHeader message={message} board={this.props.board} onDelete={this.props.onDelete}/>
-                  {attachThumbs}
-                  <blockquote className="message-text">{message.text}</blockquote>
-              </div>
-          </div>
+            <div className="post-wrapper">
+                <div className="message">
+                    <MessageHeader message={message} board={this.props.board} onDelete={this.props.onDelete}/>
+                    <div>
+                      {attachThumbs}
+                      <blockquote className="message-text">{message.text}</blockquote>
+                    </div>
+                </div>
+            </div>
         )
     }
 }

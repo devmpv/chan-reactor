@@ -94,6 +94,7 @@ class ThreadView extends React.Component {
         if (this.state.content.visible) {
           if (this.state.content.src === src || attachName === '') {
               visible = false;
+              src = "/img/redo.png";
           }
         }else {
           visible = true;

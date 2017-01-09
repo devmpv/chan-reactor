@@ -127,18 +127,17 @@ class BoardView extends React.Component {
         return (
             <div>
                 <span><a href="/">Home</a></span>
-                <p/>
+                <div className="href title"><a href={"/"+this.props.params.boardName}>{"/"+this.props.params.boardName}</a></div>
                 <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
                 <p/>
-                {this.state.items ? <ItemList params={params}/>
-                        : null}
+                {this.state.items ? <ItemList params={params}/> : null}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
             </div>
         )
     }
 }
 BoardView.propTypes = {
-  params: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired,
 };
 export default BoardView;

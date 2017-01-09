@@ -69,11 +69,11 @@ class CreateDialog extends React.Component {
     render() {
         return (
             <div>
-                <div className="create-href"><a href="#message">Create</a></div>
+                <div className="href create"><a href="#message">Create</a></div>
                 <div id="message" className="modalDialog">
                     <div>
                         <a href="#" title="Close" className="close">x</a>
-                        <h3>Create new</h3>
+                        <h4>Create new</h4>
                         <form>
                             <input type="text" placeholder="title"
                                    ref="title" className="comment-title"/>

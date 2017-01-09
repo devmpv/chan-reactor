@@ -4,7 +4,7 @@
   "description": "ChanReactor application",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/devmpv/chan-reactor"
   },
   "keywords": [
     "rest",
