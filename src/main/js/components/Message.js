@@ -22,7 +22,6 @@ class Message extends React.Component<void, Props, void> {
     handleThumbClick: (event: SyntheticInputEvent)=>void;
     constructor(props: Props) {
       super(props);
-
       this.handleThumbClick = (event: SyntheticInputEvent) => {
           this.props.onThumbClick(event.target.id);
       }

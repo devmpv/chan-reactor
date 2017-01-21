@@ -1,4 +1,4 @@
-package com.devmpv.repositories.eventListeners;
+package com.devmpv.repositories.entityListeners;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.PostRemove;

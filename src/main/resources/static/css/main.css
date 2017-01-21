@@ -77,6 +77,16 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
     margin-left: 20px;
     padding-bottom: 0.3rem;
 }
+.newCount {
+	position: fixed;
+	margin: 0;
+  right: 50%;
+  top: 0;
+	display: block;
+	padding: 3px;
+	z-index: 8888;
+	background: #DDDDDD;
+}
 #content-viewer {
 	position: fixed;
 	margin: 0;

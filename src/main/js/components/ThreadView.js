@@ -7,6 +7,7 @@ import ContentViewer from "./ContentViewer";
 
 const React = require('react');
 const client = require('../client');
+const stompClient = require('../websocket-listener');
 
 const root = '/rest/api';
 const srcPath = '/src/attach/';
@@ -17,13 +18,13 @@ class ThreadView extends React.Component {
 
     constructor(props) {
         super(props);
-        //searchRoot = searchRoot.concat('/messages/search/thread');
         this.state = {
             empty: true,
             thread: {},
             items: [],
             attributes: [],
             pageSize: 500,
+            newCount: 0,
             links: {},
             content: {
                 src: "/img/redo.png",
@@ -35,6 +36,8 @@ class ThreadView extends React.Component {
         this.onDelete = this.onDelete.bind(this);
         this.onThumbClick = this.onThumbClick.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
+        this.newMessage = this.newMessage.bind(this);
+        this.loadNew = this.loadNew.bind(this);
     }
 
     getOPMessage() {
@@ -62,24 +65,55 @@ class ThreadView extends React.Component {
                 items: messages.entity._embedded['messages'],
                 attributes: ['title', 'text'],
                 pageSize: pageSize,
+                newCount: 0,
                 links: messages.entity._links
             });
         });
     }
 
-    onCreate(form) {
-      const request = {
-              method: 'POST',
-              path: submitPath,
-              entity: form,
-              headers: {
-                  'Content-Type': 'multipart/form-data'
-              }
-          };
-      client(request).done(
-        () => {
+    loadNew() {
+        if (this.state.newCount == 0) {
+            return;
+        }
+        if (!this.state.items) {
             this.loadFromServer(this.state.pageSize);
+            return;
+        }
+        if (this.state.items.length<=20) {
+            this.loadFromServer(this.state.pageSize);
+            return;
+        }
+        client({
+            method: 'GET', path: searchRoot, params: {
+                size: this.state.items.length,
+                page: 1,
+                id: this.props.params.threadId
+            }
+        }).done(messages => {
+            let msgList = messages.entity._embedded['messages'];
+            if (!msgList) {return;}
+            let items = this.state.items;
+            items = items.concat(msgList);
+            this.setState({
+                items: items,
+                newCount: this.state.newCount-msgList.length,
+            });
         });
+    }
+
+    onCreate(form) {
+        const request = {
+                method: 'POST',
+                path: submitPath,
+                entity: form,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+        client(request).done(
+          () => {
+              this.loadFromServer(this.state.pageSize);
+          });
     }
 
     onDelete(thread) {
@@ -113,6 +147,7 @@ class ThreadView extends React.Component {
                 items: threadCollection.entity._embedded['messages'],
                 attributes: this.state.attributes,
                 pageSize: this.state.pageSize,
+                newCount: 0,
                 links: threadCollection.entity._links
             });
         });
@@ -124,8 +159,18 @@ class ThreadView extends React.Component {
         }
     }
 
+    newMessage(message) {
+        this.setState({
+            newCount: this.state.newCount+1
+        });
+    }
+
     componentDidMount() {
         this.loadFromServer(this.state.pageSize);
+        let headers = {selector: "headers['nativeHeaders']['thread'][0] == '" + this.props.params.threadId+"'"};
+      	stompClient.register([
+      		{route: '/topic/newMessage', headers: headers, callback: this.newMessage}
+      	]);
     }
 
     render() {
@@ -151,6 +196,10 @@ class ThreadView extends React.Component {
                     <ItemList params={params}/>
                 : <p/>}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
+                <div className="newCount">
+                  <span><a className="postbtn" onClick={this.loadNew}><img width="14px" height="14px" src="/img/redo.png"/></a></span>
+                  <span>{this.state.newCount}</span>
+                </div>
             </div>
         )
     }

@@ -12,7 +12,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.devmpv.repositories.eventListeners.AttachmentEntityListener;
+import com.devmpv.repositories.entityListeners.AttachmentEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
