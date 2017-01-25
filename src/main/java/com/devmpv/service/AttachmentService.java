@@ -1,9 +1,16 @@
 package com.devmpv.service;
 
+import static com.devmpv.config.Const.Thumbs.HEIGHT;
+import static com.devmpv.config.Const.Thumbs.WIDTH;
+
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +58,7 @@ public class AttachmentService {
 				Files.copy(value.getInputStream(), savedPath);
 			}
 			if (!Files.exists(thumbPath.resolve(savedName))) {
-				Thumbnails.of(value.getInputStream()).size(200, 200).toFile(thumbPath.resolve(savedName).toString());
+				createThumbnail(value.getInputStream(), savedName);
 			}
 			attach = new Attachment();
 			attach.setMd5(md5);
@@ -80,11 +87,24 @@ public class AttachmentService {
 	}
 
 	public void cleanup(Attachment attachment) {
+		Path mainPath = storagePath.resolve(attachment.getName());
+		Path thumbPath = storagePath.resolve(attachment.getName());
 		try {
-			Files.delete(storagePath.resolve(attachment.getName()));
-			Files.delete(thumbPath.resolve(attachment.getName()));
+			if (Files.exists(mainPath))
+				Files.delete(mainPath);
+			if (Files.exists(thumbPath))
+				Files.delete(thumbPath);
 		} catch (IOException e) {
 			LOG.error("Error while deleting attachment image!", e);
+		}
+	}
+
+	private void createThumbnail(InputStream stream, String savedName) throws IOException {
+		BufferedImage img = ImageIO.read(stream);
+		if (img.getHeight() <= WIDTH && img.getWidth() <= HEIGHT) {
+			Thumbnails.of(img).size(img.getWidth(), img.getHeight()).toFile(thumbPath.resolve(savedName).toString());
+		} else {
+			Thumbnails.of(img).size(WIDTH, HEIGHT).toFile(thumbPath.resolve(savedName).toString());
 		}
 	}
 

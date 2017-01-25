@@ -3,6 +3,8 @@
 const React = require('react');
 const client = require('../client');
 const boardsPath = '/rest/api/boards';
+const ListGroup = require('react-bootstrap/lib/ListGroup')
+const ListGroupItem = require('react-bootstrap/lib/ListGroupItem')
 
 class MainPage extends React.Component {
 
@@ -28,17 +30,19 @@ class MainPage extends React.Component {
 
     render() {
         let boards = this.state.boards.map(board =>
-            <div key={board._links.self.href}>
-                <span><a href={board.id}>/{board.id}</a></span>
-                <span>{board.title}</span>
-            </div>
+            <ListGroupItem header={'/' + board.id} key={board._links.self.href} href={board.id}>
+              {board.title}
+            </ListGroupItem>
         );
         return (
             <div className="panel">
                 <div>
-                    <h3>Board List</h3>
+                    <h4>Board List</h4>
                 </div>
-                {boards}
+                <ListGroup>
+                    {boards}
+                </ListGroup>
+
             </div>
         )
     }

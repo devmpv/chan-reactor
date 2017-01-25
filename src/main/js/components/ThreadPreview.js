@@ -4,6 +4,8 @@ import Message from "./Message";
 
 const React = require('react');
 const client = require('../client');
+const Button = require('react-bootstrap/lib/Button')
+const Badge = require('react-bootstrap/lib/Badge')
 const previewPath = '/rest/api/messages/search/preview';
 const countPath = '/rest/api/messages/search/count';
 const currentUrl = window.location.pathname.concat("/thread/");
@@ -27,7 +29,6 @@ class ThreadPreview extends React.Component {
             this.setState({
                 messages: preview.entity._embedded.messages.reverse()
             });
-
         });
         client({
             method: 'GET', path: countPath, params: {
@@ -47,7 +48,8 @@ class ThreadPreview extends React.Component {
                 <Message message={message}
                     onThumbClick={this.props.onThumbClick}
                     board={true}
-                    onDelete={this.props.onDelete}/>
+                    onDelete={this.props.onDelete}
+                    onDialogOpen={this.props.onDialogOpen}/>
             </div>
         );
         let count = this.state.count-this.state.messages.length;
@@ -57,15 +59,11 @@ class ThreadPreview extends React.Component {
                     <Message message={this.props.thread}
                         onThumbClick={this.props.onThumbClick}
                         board={true}
-                        onDelete={this.props.onDelete}/>
-                    <div>
-                        [<a href={currentUrl.concat(this.props.thread.id)}>Open</a>]
-                    </div>
+                        onDelete={this.props.onDelete}
+                        onDialogOpen={this.props.onDialogOpen}/>
+                        <Button href={currentUrl.concat(this.props.thread.id)} bsStyle="primary" bsSize="xsmall">Open <Badge title="Omitted replies">{count}</Badge></Button>
                 </div>
-                <div className="panel">
-                    {count > 0 ? <div>Hidden replies: {count}</div> : null}
-                    {replies}
-                </div>
+                <div className="reply-panel">{replies}</div>
             </div>
         )
     }

@@ -1,25 +1,45 @@
 'use strict';
 
-// tag::vars[]
 const React = require('react');
 const Dropzone = require('react-dropzone');
-// end::vars[]
+const Button = require('react-bootstrap/lib/Button')
+const FormGroup = require('react-bootstrap/lib/FormGroup')
+const ControlLabel = require('react-bootstrap/lib/ControlLabel')
+const FormControl = require('react-bootstrap/lib/FormControl')
+const HelpBlock = require('react-bootstrap/lib/HelpBlock')
+const Modal = require('react-bootstrap/lib/Modal')
 
-// tag::create-dialog[]
 class CreateDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {files: []};
+        this.state = {files: [], title: "", text: ""};
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleTextChange = this.handleTextChange.bind(this);
         this.onDrop = this.onDrop.bind(this);
+    }
+
+    getValidationState() {
+        const length = this.state.title.length;
+        if (this.state.text.length == 0) return 'error';
+        if (length > 1) return 'success';
+        else if (length > 50) return 'warning';
+    }
+
+    handleTitleChange(e) {
+        this.setState({ title: e.target.value });
+    }
+
+    handleTextChange(e) {
+        this.setState({ text: e.target.value });
     }
 
     handleSubmit(e) {
         e.preventDefault();
         let form = new FormData();
-        let title = this.refs['title'].value.trim();
-        let text = this.refs['text'].value.trim();
+        let title = this.state.title.substring(0,49);
+        let text = this.state.text.substring(0,14999);
         if (this.props.threadId) {
             form.append('thread', this.props.threadId);
         }else {
@@ -42,19 +62,16 @@ class CreateDialog extends React.Component {
             return;
         }
         this.state.files.map(file => form.append(file.name, file));
-
         form.append('title', title);
         form.append('text', text);
         this.props.onCreate(form);
 
-        this.refs['title'].value = '';
-        this.refs['text'].value = '';
         this.setState({
-            files: []
+            files: [],
+            text: "",
+            title: ""
         });
-
-        // Navigate away from the dialog to hide it.
-        window.location = "#";
+        this.props.onClose();
     }
 
     onDrop(acceptedFiles, rejectedFiles) {
@@ -68,49 +85,51 @@ class CreateDialog extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className="href create"><a href="#message">Create</a></div>
-                <div id="message" className="modalDialog">
-                    <div>
-                        <a href="#" title="Close" className="close">x</a>
-                        <h4>Create new</h4>
-                        <form>
-                            <input type="text" placeholder="title"
-                                   ref="title" className="comment-title"/>
-                            <div>
-                                <textarea name="text" rows="6" placeholder="Message text"
-                                          ref="text"
-                                          className="comment-text">
-                                </textarea>
-                            </div>
-                            <div>
-                                <Dropzone onDrop={this.onDrop} maxSize={1048576} accept="image/*">
-                                    <div>Try dropping some files here, or click to select files to
-                                        upload.
-                                    </div>
-                                </Dropzone>
-                                {this.state.files.length > 0 ? <div>
-                                    <h2>Uploading {this.state.files.length} files...</h2>
-                                    <div>
-                                        {this.state.files.map((file) =>
-                                            <img key={file.name}
-                                                 src={file.preview}
-                                                 width="100px"
-                                                 height="100px"
-                                            />)
-                                        }
-                                    </div>
-                                </div> : null}
-                            </div>
-                            <button onClick={this.handleSubmit}>Create</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+          <Modal show={this.props.visible} onHide={this.props.onClose} backdrop={false} bsSize="small" enforceFocus={false}>
+              <Modal.Body>
+                  <form>
+                      <FormGroup controlId="formBasicText" validationState={this.getValidationState()}>
+                          <FormControl
+                            type="text"
+                            value={this.state.title}
+                            placeholder="Enter title"
+                            onChange={this.handleTitleChange}/>
+                          <FormControl.Feedback />
+                          <FormControl
+                            componentClass="textarea"
+                            value={this.state.text}
+                            placeholder="Enter text"
+                            onChange={this.handleTextChange}/>
+                      </FormGroup>
+                      <div>
+                          <Dropzone onDrop={this.onDrop} maxSize={1048576} accept="image/*">
+                              <div>Try dropping some files here, or click to select files to
+                                  upload.
+                              </div>
+                          </Dropzone>
+                          {this.state.files.length > 0 ? <div>
+                              Uploading {this.state.files.length} file(s)...
+                              <div>
+                                  {this.state.files.map((file) =>
+                                      <img key={file.name}
+                                           src={file.preview}
+                                           width="100px"
+                                           height="100px"
+                                      />)
+                                  }
+                              </div>
+                          </div> : <span/>}
+                      </div>
+                  </form>
+              </Modal.Body>
+              <Modal.Footer>
+                  <Button bsStyle="success" bsSize="xsmall" onClick={this.handleSubmit}>Create</Button>
+                  <Button bsSize="xsmall" onClick={this.props.onClose}>Close</Button>
+              </Modal.Footer>
+          </Modal>
         )
     }
 }
-// end::create-dialog[]
 CreateDialog.propTypes = {
   threadId: React.PropTypes.string,
   boardName: React.PropTypes.string,

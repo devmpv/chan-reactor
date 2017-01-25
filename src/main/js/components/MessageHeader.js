@@ -1,6 +1,7 @@
 'use strict';
 
 const React = require('react');
+const Button = require('react-bootstrap/lib/Button')
 
 class MessageHeader extends React.Component {
 
@@ -20,7 +21,7 @@ class MessageHeader extends React.Component {
                 <span>Anonymous</span>
                 <span>{date}</span>
                 <span><a name={this.props.message.id} href={'#'+this.props.message.id}>{'#'+this.props.message.id}</a></span>
-                {this.props.board == true ? null : <span><a className="postbtn" href="#message"><img width="14px" height="14px" src="/img/round-right.png"/></a></span>}
+                {this.props.board == true ? null : <Button bsStyle="link" bsSize="xsmall" onClick={this.props.onDialogOpen}><img width="14px" height="14px" src="/img/round-right.png"/></Button>}
             </div>
         )
     }

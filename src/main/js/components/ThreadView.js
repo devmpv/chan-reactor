@@ -8,6 +8,9 @@ import ContentViewer from "./ContentViewer";
 const React = require('react');
 const client = require('../client');
 const stompClient = require('../websocket-listener');
+const Button = require('react-bootstrap/lib/Button');
+const ButtonToolbar = require('react-bootstrap/lib/ButtonToolbar');
+const Badge = require('react-bootstrap/lib/Badge');
 
 const root = '/rest/api';
 const srcPath = '/src/attach/';
@@ -19,6 +22,7 @@ class ThreadView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            createDialog: false,
             empty: true,
             thread: {},
             items: [],
@@ -38,6 +42,16 @@ class ThreadView extends React.Component {
         this.onNavigate = this.onNavigate.bind(this);
         this.newMessage = this.newMessage.bind(this);
         this.loadNew = this.loadNew.bind(this);
+        this.onOpen = this.onOpen.bind(this);
+        this.onClose = this.onClose.bind(this);
+    }
+
+    onClose() {
+        this.setState({ createDialog: false });
+    }
+
+    onOpen() {
+        this.setState({ createDialog: true });
     }
 
     getOPMessage() {
@@ -178,6 +192,7 @@ class ThreadView extends React.Component {
                 items: this.state.items,
                 links: this.state.links,
                 pageSize: this.state.pageSize,
+                onDialogOpen: this.onOpen,
                 onNavigate: this.onNavigate,
                 onDelete: this.onDelete,
                 onThumbClick: this.onThumbClick,
@@ -187,18 +202,21 @@ class ThreadView extends React.Component {
             <div>
                 <span><a href="/">Home</a></span>
                 <span><a href={boardLink}>{boardLink}</a></span>
-                <p/>
-                <CreateDialog attributes={this.state.attributes} threadId={this.props.params.threadId}
+                <CreateDialog visible={this.state.createDialog}
+                              onClose={this.onClose}
+                              threadId={this.props.params.threadId}
                               onCreate={this.onCreate}/>
-                <br></br>
-                {this.state.thread.attachments ? <Message message={this.state.thread} board={false} onThumbClick={this.onThumbClick}/> : <p/>}
+                <p/><p/>
+                {this.state.thread.attachments ? <Message onDialogOpen={this.onOpen} message={this.state.thread} board={false} onThumbClick={this.onThumbClick}/> : <p/>}
                 {this.state.items && this.state.items.length > 0 ?
                     <ItemList params={params}/>
                 : <p/>}
                 <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
                 <div className="newCount">
-                  <span><a className="postbtn" onClick={this.loadNew}><img width="14px" height="14px" src="/img/redo.png"/></a></span>
-                  <span>{this.state.newCount}</span>
+                  <ButtonToolbar>
+                      <Button onClick={this.onOpen} bsStyle="success" bsSize="xsmall">Reply</Button>
+                      <Button bsStyle="primary" bsSize="xsmall" onClick={this.loadNew}>Refresh <Badge title="Omitted replies">{this.state.newCount}</Badge></Button>
+                  </ButtonToolbar>
                 </div>
             </div>
         )

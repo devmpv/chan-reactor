@@ -24,7 +24,7 @@ class ContentViewer extends React.Component {
         let style = this.props.content.visible ? block : none;
         return (
             <div style={style} id="content-viewer">
-                <img id='content' src={this.props.content.src} onClick={this.handleThumbClick}/>
+                <img id="content" src={this.props.content.src} onClick={this.handleThumbClick}/>
             </div>
         )
     }

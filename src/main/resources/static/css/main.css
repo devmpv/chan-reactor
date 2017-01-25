@@ -2,8 +2,6 @@ html,body{background-color:#EEEEEE;color:#333333;font-family: Verdana,sans-serif
 body { margin: 0; padding: 8px; margin-bottom: auto;font-size:0.9em; }
 html {	overflow-y: scroll; }
 * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box; }
-blockquote blockquote { display: block; max-height: 1200px; overflow: auto;}
-/*form, .data { margin-bottom: 0px; font-size:0.9em; }*/
 table {  border-collapse: separate; border-spacing: 2px; border-style:none;}
 table td{border-style:none;}
 img.fullsize, video { max-width: 100%; height: auto; }
@@ -12,13 +10,18 @@ form textarea { display: block; }
 hr {clear: both; border: none;border-top: 1px solid #DDD;height: 0;}
 sub {vertical-align: sub;font-size: smaller;}
 sup {vertical-align: super;	font-size: smaller;}
-blockquote{display:block;margin: 1em 35px;}
 td, td img {vertical-align: top;}
 span {padding: 5px}
 a, .a-link-emulator {	color:#00716a;	margin:0;	padding:0;	font-size:100%;	vertical-align:baseline;	background:transparent; cursor: pointer; text-decoration: none;}
 a:hover, .a-link-emulator:hover{color:#de7800;}
 
 /*Various classes*/
+.thumb {
+	min-width: 36px;
+	min-height: 36px;
+	max-width: 200px;
+	max-height: 200px;
+}
 .postbtn {
 	outline:none;
 	cursor:pointer;
@@ -36,15 +39,11 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
   font-size: 1.17em;
 	font-weight: bold;
 }
-.href.create{
-  border-style: dashed;
-  border-width: thin;
-}
-.comment-title {
+.message-title {
   width: 100%;
 }
-.comment-text {
-  width: 100%
+.message-text {
+	max-height: 800px; margin: 1em 35px; overflow: auto;
 }
 .post {
 		margin: 0px 0px 4px 0px;
@@ -53,11 +52,12 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
 }
 .post-wrapper {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     margin: 0px 0px 4px 0px;
     overflow: visible;
     word-wrap: break-word;
     align-items: flex-start;
+		max-width: 95%;
 }
 .message {
 	display: inline-block;
@@ -73,19 +73,28 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
   margin-bottom: 4px;
 }
 .message .message-title{background:inherit;font-size:1em;	color:#002244;font-weight:bold;}
-.panel {
+.message .multi-attach{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+.reply-panel {
     margin-left: 20px;
     padding-bottom: 0.3rem;
 }
 .newCount {
 	position: fixed;
 	margin: 0;
-  right: 50%;
   top: 0;
-	display: block;
+	left: 50%;
+  transform: translate(-50%, 0);
 	padding: 3px;
 	z-index: 8888;
 	background: #DDDDDD;
+	border: dashed 1px #00716a;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
 }
 #content-viewer {
 	position: fixed;
@@ -99,62 +108,15 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
 	background-color: rgb(85, 85, 85);
 }
 #content {
-	height: 100%; width: 100%; object-fit: scale-down;
+	height: 100%;
+	width: 100%;
+	object-fit: scale-down;
+	min-width: 36px;
+	min-height: 36px;
+	background-color: #FFF;
 }
 
 #content-viewer-controls {display:none;font-size: 0.8em;cursor: pointer;}
 #content-viewer-controls i {position: absolute;background: rgb(85, 85, 85);padding: 3px 5px;color: #CCC;}
 #content-viewer-controls i.fa-times {top: 6px;left: 6px;}
 #content-viewer-controls i.fa-thumb-tack {top: 6px;left: 24px;}
-
-/*Classes for creating dialogs*/
-
-.modalDialog {
-    position: fixed;
-    /*font-family: Arial, Helvetica, sans-serif;*/
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    /*-background: rgba(85,85,85,0.8);*/
-    z-index: 99999;
-    opacity:0;
-    -webkit-transition: opacity 200ms ease-in;
-    -moz-transition: opacity 200ms ease-in;
-    transition: opacity 200ms ease-in;
-    pointer-events: none;
-}
-
-.modalDialog:target {
-    opacity:1;
-    pointer-events: auto;
-}
-
-.modalDialog > div {
-    width: 400px;
-    position: relative;
-    margin: 10% auto;
-    padding: 5px 20px 13px 20px;
-    background: #DEDEDE;
-		border-style: dashed;
-		border-width: thin;
-}
-
-.close {
-    background: #606061;
-    color: #FFFFFF;
-    line-height: 20px;
-    position: absolute;
-    right: -3px;
-    text-align: center;
-    top: -3px;
-    width: 20px;
-    text-decoration: none;
-    font-weight: bold;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
-    -moz-box-shadow: 1px 1px 3px #000;
-    -webkit-box-shadow: 1px 1px 3px #000;
-    box-shadow: 1px 1px 3px #000;
-}

@@ -4,7 +4,7 @@ import ContentViewer from "./ContentViewer";
 
 const React = require('react');
 const client = require('../client');
-
+const Button = require('react-bootstrap/lib/Button')
 const srcPath = '/src/attach/';
 const root = '/rest/api';
 const submitPath = root + '/res/submit';
@@ -23,6 +23,7 @@ class BoardView extends React.Component {
             attributes: [],
             pageSize: 20,
             links: {},
+            createDialog: false,
             content: {
                 src: "/img/redo.png",
                 visible: false
@@ -33,6 +34,16 @@ class BoardView extends React.Component {
         this.onDelete = this.onDelete.bind(this);
         this.onThumbClick = this.onThumbClick.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
+        this.onOpen = this.onOpen.bind(this);
+        this.onClose = this.onClose.bind(this);
+    }
+
+    onClose() {
+        this.setState({ createDialog: false });
+    }
+
+    onOpen() {
+        this.setState({ createDialog: true });
     }
 
     loadFromServer(pageSize) {
@@ -118,6 +129,7 @@ class BoardView extends React.Component {
             board: true,
             items: this.state.items,
             links: this.state.links,
+            onDialogOpen: this.onOpen,
             pageSize: this.state.pageSize,
             onNavigate: this.onNavigate,
             onDelete: this.onDelete,
@@ -128,7 +140,10 @@ class BoardView extends React.Component {
             <div>
                 <span><a href="/">Home</a></span>
                 <div className="href title"><a href={"/"+this.props.params.boardName}>{"/"+this.props.params.boardName}</a></div>
-                <CreateDialog attributes={this.state.attributes} boardName={this.props.params.boardName}
+                <div className="href"><Button onClick={this.onOpen} bsStyle="success" bsSize="xsmall">Create</Button></div>
+                <CreateDialog visible={this.state.createDialog}
+                              onClose={this.onClose}
+                              boardName={this.props.params.boardName}
                               onCreate={this.onCreate}/>
                 <p/>
                 {this.state.items ? <ItemList params={params}/> : null}
