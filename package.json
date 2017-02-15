@@ -34,7 +34,6 @@
   },
   "scripts": {
     "watch": "webpack --watch -d",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "eslintConfig": {
     "plugins": [
@@ -71,8 +70,8 @@
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "copy-webpack-plugin": "^4.0.1",
     "eslint": "^3.12.2",
-    "eslint-plugin-react": "^6.8.0",
-    "flow-bin": "^0.37.4"
+    "eslint-plugin-react": "^6.8.0"
   }
 }
