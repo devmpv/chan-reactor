@@ -1,3 +1,5 @@
+'use strict';
+
 import CreateDialog from "./CreateDialog";
 import ItemList from "./ItemList";
 import ContentViewer from "./ContentViewer";

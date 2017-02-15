@@ -15,12 +15,27 @@ class ReactAutolinker extends React.Component {
     } = this.props;
 
     const tags = [];
-    Autolinker.link(text, {options, replaceFn: (match) => {
-      const tag = match.buildTag();
-      tags.push(tag);
-      return tag;
-    }});
-
+    options.replaceFn = (match) => {
+      let tag;
+      switch( match.getType() ) {
+            case 'hashtag' :
+                tag = match.buildTag();
+                tag.setAttr( 'href', '#'+ match.getHashtag() );
+                tag.setAttr( 'target', '_self')
+                tag.setAttr( 'id', 'popup')
+                //tag.addClass( 'external-link' );
+                tag.setAttr( 'rel', 'noopener noreferrer' );
+                tag.setAttr( 'title', match.getHashtag() );
+                tag.setInnerHtml( '>>' + match.getHashtag() );
+                tags.push(tag);
+                return tag;
+            default:
+                tag = match.buildTag();
+                tags.push(tag);
+                return tag;
+        }
+    };
+    Autolinker.link(text, options);
     let _text = text;
     const childern = [];
     for(let tag of tags) {

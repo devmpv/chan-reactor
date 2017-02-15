@@ -44,6 +44,7 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
 }
 .message-text {
 	max-height: 800px; margin: 1em 35px; overflow: auto;
+	white-space: pre;
 }
 .post {
 		margin: 0px 0px 4px 0px;

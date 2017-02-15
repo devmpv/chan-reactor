@@ -1,5 +1,3 @@
-// @flow
-
 'use strict';
 
 import ThreadPreview from "./ThreadPreview";
@@ -7,14 +5,7 @@ import Message from "./Message";
 
 const React = require('react');
 
-type Props = {params: {}}
-
 class ItemList extends React.Component {
-    handleNavFirst: Function;
-    handleNavPrev: Function;
-    handleNavNext: Function;
-    handleNavLast: Function;
-    handleInput: Function;
 
     constructor(props: Props) {
         super(props);
@@ -25,7 +16,6 @@ class ItemList extends React.Component {
         this.handleInput = this.handleInput.bind(this);
     }
 
-    // tag::handle-page-size-updates[]
     handleInput(e: SyntheticInputEvent) {
         e.preventDefault();
         let pageSize = this.refs.pageSize.value;
@@ -37,9 +27,6 @@ class ItemList extends React.Component {
         }
     }
 
-    // end::handle-page-size-updates[]
-
-    // tag::handle-nav[]
     handleNavFirst(e: SyntheticInputEvent) {
         e.preventDefault();
         this.props.onNavigate(this.props.links.first.href);
@@ -60,9 +47,6 @@ class ItemList extends React.Component {
         this.props.onNavigate(this.props.links.last.href);
     }
 
-    // end::handle-nav[]
-
-    // tag::message-list-render[]
     render() {
         let items;
         if (this.props.params.board) {

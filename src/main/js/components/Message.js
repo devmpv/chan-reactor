@@ -12,13 +12,6 @@ const thumbPath = srcPath+'thumbs/';
 export type Msg = {type: 'msg', attachments: Attachment[], text: string}
 export type Attachment = {type: 'attachment', name: string}
 
-type Props = {
-  onThumbClick: () => void,
-  onDelete: () => void,
-  message: Msg,
-  board: boolean
-}
-
 class Message extends React.Component<void, Props, void> {
     handleThumbClick: (event: SyntheticInputEvent)=>void;
     constructor(props: Props) {
@@ -38,7 +31,7 @@ class Message extends React.Component<void, Props, void> {
         );
         let style = message.attachments.length > 1 ? "" : "multi-attach";
         return (
-            <div className="post-wrapper">
+            <div className="post-wrapper" id={'msg'+message.id}>
                 <div className="message">
                     <MessageHeader message={message} board={this.props.board} onDelete={this.props.onDelete} onDialogOpen={this.props.onDialogOpen}/>
                     <div className={style}>
@@ -47,7 +40,7 @@ class Message extends React.Component<void, Props, void> {
                         <Button bsStyle="link" onClick={ ()=> this.setState({ open: !this.state.open })}>{this.state.open ? "Hide" : "Comment is too long. Show..."}</Button>
                         <Collapse in={this.state.open}><p className="message-text">{message.text}</p></Collapse>
                       </div> :
-                        <div className="message-text"><ReactAutolinker text={message.text}/></div>
+                        <div className="message-text"><ReactAutolinker text={message.text} options={{truncate: { length: 50, location: 'end' }, hashtag: 'facebook'}}/></div>
                       }
                     </div>
                 </div>

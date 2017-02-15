@@ -11,16 +11,11 @@ import com.devmpv.repositories.ThreadRepository;
 
 @Component
 public class DatabaseLoader implements CommandLineRunner {
-
-	// private final ThreadRepository threadRepo;
 	private final BoardRepository boardRepo;
-	// private final MessageRepository messageRepository;
 
 	@Autowired
 	public DatabaseLoader(ThreadRepository threadRepo, BoardRepository boardRepo, MessageRepository messageRepository) {
-		// this.threadRepo = threadRepo;
 		this.boardRepo = boardRepo;
-		// this.messageRepository = messageRepository;
 	}
 
 	@Override
@@ -31,8 +26,8 @@ public class DatabaseLoader implements CommandLineRunner {
 		if (!boardRepo.exists("po")) {
 			this.boardRepo.save(new Board("po", "Politics"));
 		}
-		if (!boardRepo.exists("g")) {
-			this.boardRepo.save(new Board("g", "Girls"));
+		if (!boardRepo.exists("dev")) {
+			this.boardRepo.save(new Board("dev", "Development"));
 		}
 	}
 }
