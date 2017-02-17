@@ -12,8 +12,8 @@ module.exports = {
         path: __dirname,
         filename: './src/main/resources/static/built/bundle.js'
     },
-    target: 'node', // in order to ignore built-in modules like path, fs, etc.
-    externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+    //target: 'node', // in order to ignore built-in modules like path, fs, etc.
+    //externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
     module: {
         loaders: [
             {
@@ -28,12 +28,6 @@ module.exports = {
         ]
     },
     context: path.join(__dirname, '.'),
-    devServer: {
-        // This is required for older versions of webpack-dev-server
-        // if you use absolute 'to' paths. The path should be an
-        // absolute path to your build destination.
-        //outputPath: path.join(__dirname, 'build')
-    },
     plugins: [
         new CopyWebpackPlugin([
             { from: './src/main/resources/static/built', to: './target/classes/static/built' }
