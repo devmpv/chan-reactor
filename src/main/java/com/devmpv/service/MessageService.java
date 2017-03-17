@@ -11,8 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document.OutputSettings;
+import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +51,19 @@ public class MessageService {
 	@Autowired
 	private AttachmentService attachmentService;
 
+	private OutputSettings textSettings = new OutputSettings();
+
+	@PostConstruct
+	private void postConstruct() {
+		textSettings.prettyPrint(false);
+	}
+
+	private String prepareText(String input) {
+		String cleanHtml = Jsoup.clean(input, "", Whitelist.basic(), textSettings);
+		cleanHtml = cleanHtml.replaceAll("&gt;&gt;([0-9]{1,8})", "<a id='reply-link' key='$1'>$1</a>");
+		return cleanHtml;
+	}
+
 	private Message saveAttachments(Message message, Map<String, MultipartFile> files) throws Exception {
 		Set<Attachment> result = new HashSet<>();
 		Set<String> errors = new HashSet<>();
@@ -64,34 +81,44 @@ public class MessageService {
 		return message;
 	}
 
+	private Long saveMessage(Map<String, String[]> params, Map<String, MultipartFile> files, String text)
+			throws Exception {
+		Thread thread = threadRepo.findOne(Long.valueOf(params.get(THREAD)[0]));
+		Message message = new Message(params.get(TITLE)[0], text);
+		message.setThread(thread);
+		saveAttachments(message, files);
+		long count = messageRepo.countByThreadId(thread.getId());
+		if (count < messageBumpLimit) {
+			thread.setUpdated(message.getTimestamp());
+			threadRepo.save(thread);
+		}
+		if (count >= messageMaxCount) {
+			throw new Exception("Thread limit exceeded!");
+		}
+		return messageRepo.save(message).getId();
+	}
+
 	@Transactional
 	public Long saveNew(Map<String, String[]> params, Map<String, MultipartFile> files) throws Exception {
+		String text = prepareText(params.get(TEXT)[0]);
 		if (params.containsKey(THREAD)) {
-			Thread thread = threadRepo.findOne(Long.valueOf(params.get(THREAD)[0]));
-			Message message = new Message(params.get(TITLE)[0], params.get(TEXT)[0]);
-			message.setThread(thread);
-			saveAttachments(message, files);
-			long count = messageRepo.countByThreadId(thread.getId());
-			if (count < messageBumpLimit) {
-				thread.setUpdated(message.getTimestamp());
-				threadRepo.save(thread);
-			}
-			if (count >= messageMaxCount) {
-				throw new Exception("Thread limit exceeded!");
-			}
-			return messageRepo.save(message).getId();
+			return saveMessage(params, files, text);
 		} else {
-			Board board = boardRepo.findOne(params.get(BOARD)[0]);
-			long count = threadRepo.countByBoard(board);
-			if (count >= threadMaxCount) {
-				List<Thread> threads = threadRepo.findByBoardOrderByUpdatedAsc(board);
-				for (int i = 0; i < count - (threadMaxCount - 1); i++) {
-					threadRepo.delete(threads.get(i));
-				}
-			}
-			Thread thread = (Thread) saveAttachments(new Thread(board, params.get(TITLE)[0], params.get(TEXT)[0]),
-					files);
-			return threadRepo.save(thread).getId();
+			return saveThread(params, files, text);
 		}
+	}
+
+	private Long saveThread(Map<String, String[]> params, Map<String, MultipartFile> files, String text)
+			throws Exception {
+		Board board = boardRepo.findOne(params.get(BOARD)[0]);
+		long count = threadRepo.countByBoard(board);
+		if (count >= threadMaxCount) {
+			List<Thread> threads = threadRepo.findByBoardOrderByUpdatedAsc(board);
+			for (int i = 0; i < count - (threadMaxCount - 1); i++) {
+				threadRepo.delete(threads.get(i));
+			}
+		}
+		Thread thread = (Thread) saveAttachments(new Thread(board, params.get(TITLE)[0], text), files);
+		return threadRepo.save(thread).getId();
 	}
 }

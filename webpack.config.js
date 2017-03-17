@@ -21,7 +21,9 @@ module.exports = {
                     cacheDirectory: true,
                     presets: ['es2015', 'react']
                 }
-            }
+            },
+            { test: /\.json$/, loader: 'json-loader' },
+            { test: /\.css$/, loader: "style-loader!css-loader" }
         ]
     },
     context: path.join(__dirname, '.'),

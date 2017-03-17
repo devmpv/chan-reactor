@@ -88,12 +88,12 @@ public class AttachmentService {
 
 	public void cleanup(Attachment attachment) {
 		Path mainPath = storagePath.resolve(attachment.getName());
-		Path thumbPath = storagePath.resolve(attachment.getName());
+		Path thumbsPath = thumbPath.resolve(attachment.getName());
 		try {
 			if (Files.exists(mainPath))
 				Files.delete(mainPath);
-			if (Files.exists(thumbPath))
-				Files.delete(thumbPath);
+			if (Files.exists(thumbsPath))
+				Files.delete(thumbsPath);
 		} catch (IOException e) {
 			LOG.error("Error while deleting attachment image!", e);
 		}

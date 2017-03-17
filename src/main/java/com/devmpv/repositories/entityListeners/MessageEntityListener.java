@@ -1,5 +1,7 @@
 package com.devmpv.repositories.entityListeners;
 
+import static com.devmpv.config.WebSocketConfig.MESSAGE_PREFIX;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +16,6 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import com.devmpv.config.WebSocketConfig;
 import com.devmpv.model.Message;
 import com.devmpv.model.Thread;
 import com.devmpv.repositories.AttachmentRepository;
@@ -43,13 +44,13 @@ public class MessageEntityListener {
 		}
 		Map<String, Object> headers = new HashMap<>();
 		headers.put("thread", message.getThread().getId());
-		template.convertAndSend(WebSocketConfig.MESSAGE_PREFIX + "/newMessage", getPath(message), headers);
+		template.convertAndSend(MESSAGE_PREFIX + "/newMessage", getPath(message), headers);
 	}
 
 	@PreRemove
 	public void onPreRemove(Message message) {
 		message.getAttachments().forEach(attach -> {
-			if (attachRepo.countMessages(attach.getId()) == 1) {
+			if (attach.getMessages().size() == 1 && attach.getMessages().contains(message)) {
 				attachRepo.delete(attach);
 			}
 		});

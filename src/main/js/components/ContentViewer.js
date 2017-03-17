@@ -13,19 +13,15 @@ class ContentViewer extends React.Component {
     constructor(props) {
         super(props);
         this.handleThumbClick = (event : SyntheticInputEvent) => {
-            this
-                .props
-                .onThumbClick('');
+            this.props.onThumbClick(event);
         }
     }
 
     render() {
-        let style = this.props.content.visible
-            ? block
-            : none;
+        let style = this.props.content.visible ? block : none;
         return (
             <div style={style} id="content-viewer">
-                <img id="content" src={this.props.content.src} onClick={this.handleThumbClick}/>
+                <img id="" src={this.props.content.src} onClick={this.handleThumbClick}/>
             </div>
         )
     }

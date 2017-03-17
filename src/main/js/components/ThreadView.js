@@ -1,16 +1,14 @@
 'use strict'
 
-import CreateDialog from "./CreateDialog";
-import ItemList from "./ItemList";
-import Message from "./Message";
-import ContentViewer from "./ContentViewer";
-
 const React = require('react');
 const client = require('../client');
 const stompClient = require('../websocket-listener');
-const Button = require('react-bootstrap/lib/Button');
-const ButtonToolbar = require('react-bootstrap/lib/ButtonToolbar');
-const Badge = require('react-bootstrap/lib/Badge');
+
+import {Popover, Breadcrumb, Button, ButtonToolbar, Badge} from 'react-bootstrap';
+import CreateDialog from "./CreateDialog";
+import ContentViewer from "./ContentViewer";
+import {СThread, CPopover, СMessage, CThumbs} from "./Components";
+import Parser from 'html-react-parser';
 
 const root = '/rest/api';
 const srcPath = '/src/attach/';
@@ -22,67 +20,99 @@ class ThreadView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            createDialog: false,
-            empty: true,
             thread: {},
-            items: [],
-            attributes: [],
+            createDialog: false,
+            replies: {},
             pageSize: 500,
             newCount: 0,
-            links: {},
             content: {
                 src: "/img/redo.png",
                 visible: false
             }
         };
-        this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onThumbClick = this.onThumbClick.bind(this);
-        this.onNavigate = this.onNavigate.bind(this);
         this.newMessage = this.newMessage.bind(this);
         this.loadNew = this.loadNew.bind(this);
-        this.onOpen = this.onOpen.bind(this);
-        this.onClose = this.onClose.bind(this);
-    }
-
-    onClose() {
-        this.setState({ createDialog: false });
-    }
-
-    onOpen() {
-        this.setState({ createDialog: true });
-    }
-
-    getOPMessage() {
-        client({
-            method: 'GET', path: root + '/threads/' + this.props.params.threadId, params: {
-                projection: 'inlineAttachments'
-            }
-        }).done(response => {
-            this.setState({
-                thread: response.entity
-            });
-        });
+        this.onOpen = () => this.setState({ createDialog: true });
+        this.onClose = () => this.setState({ createDialog: false });
+        this.renderPopover = this.renderPopover.bind(this);
     }
 
     loadFromServer(pageSize) {
-        this.getOPMessage();
-        client({
-            method: 'GET', path: searchRoot, params: {
-                size: pageSize,
-                id: this.props.params.threadId
+      let thread;
+      client({
+          method: 'GET', path: root + '/threads/' + this.props.params.threadId, params: {
+              projection: 'inlineAttachments'
+          }
+      }).done(response => {
+          thread = {
+            id: response.entity.id,
+            attachments: response.entity.attachments,
+            title: response.entity.title,
+            text: response.entity.text,
+            updated: response.entity.updated,
+            messages: []
+          };
+          thread = this.createThumbs(thread);
+          thread.text = Parser(thread.text);
+          client({
+              method: 'GET', path: searchRoot, params: {
+                  size: pageSize,
+                  id: this.props.params.threadId
+              }
+          }).done(reply => {
+              let messages = reply.entity._embedded['messages'] ? reply.entity._embedded['messages'] : [];
+              for (let message of messages.reverse()) {
+                  thread.messages[message.id] = this.parseText(this.createThumbs(message), thread, 0);
+              }
+              this.setState({
+                  thread: thread,
+                  pageSize: pageSize,
+                  newCount: 0
+              });
+          });
+      });
+    }
+
+    renderPopover(index, messageId) {
+      let thread = this.state.thread;
+      let message = thread.id == messageId ? thread : thread.messages[messageId];
+      return(
+          <Popover bsClass="popover-custom" id={messageId}>
+            <СMessage message={message} controls={<div/>} style="message" replies={this.state.replies[messageId.toString()]}/>
+          </Popover>
+      )
+    }
+
+    createThumbs(message) {
+      message.thumbs = <CThumbs attachments={message.attachments} onThumbClick={this.onThumbClick}/>;
+      return message;
+    }
+
+    parseText(message, thread, index) {
+      let replies = this.state.replies;
+      let renderPopover = this.renderPopover;
+      message.text = Parser(message.text,{
+        replace: function(domNode)  {
+            if (domNode.attribs && domNode.attribs.id === 'reply-link') {
+              if (thread.messages[domNode.attribs.key] || thread.id == domNode.attribs.key) {
+                let id_string = domNode.attribs.key.toString();
+                let list = replies[id_string] ? replies[id_string] : {};
+                list[message.id.toString()] = <CPopover key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
+                replies[id_string] = list;
+                return <CPopover threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
+              } else {
+                return <span>{'>>'+domNode.attribs.key}</span>
+              }
             }
-        }).done(messages => {
-            this.setState({
-                empty: false,
-                items: messages.entity._embedded['messages'],
-                attributes: ['title', 'text'],
-                pageSize: pageSize,
-                newCount: 0,
-                links: messages.entity._links
-            });
-        });
+        }
+      });
+      this.setState({
+          replies: replies
+      });
+      return message;
     }
 
     loadNew() {
@@ -136,41 +166,24 @@ class ThreadView extends React.Component {
         });
     }
 
-    onThumbClick(attachName) {
+    onThumbClick(event) {
+      let attachName = event.target.id;
       let visible = this.state.content.visible;
-      let src = srcPath+attachName;
-        if (this.state.content.visible) {
-          if (this.state.content.src === src || attachName === '') {
-              visible = false;
-              src = "/img/redo.png";
+      let src = srcPath + attachName;
+      if (this.state.content.visible) {
+        if (this.state.content.src === src || attachName === '') {
+            visible = false;
+            src = "/img/redo.png";
+        }
+      }else {
+        visible = true;
+      }
+      this.setState({
+          content: {
+              src: src,
+              visible: visible
           }
-        }else {
-          visible = true;
-        }
-        this.setState({
-            content: {
-                src: src,
-                visible: visible
-            }
-        });
-    }
-
-    onNavigate(navUri) {
-        client({method: 'GET', path: navUri}).done(threadCollection => {
-            this.setState({
-                items: threadCollection.entity._embedded['messages'],
-                attributes: this.state.attributes,
-                pageSize: this.state.pageSize,
-                newCount: 0,
-                links: threadCollection.entity._links
-            });
-        });
-    }
-
-    updatePageSize(pageSize) {
-        if (pageSize !== this.state.pageSize) {
-            this.loadFromServer(pageSize);
-        }
+      });
     }
 
     newMessage(message) {
@@ -188,38 +201,28 @@ class ThreadView extends React.Component {
     }
 
     render() {
-        let params = {board: false,
-                items: this.state.items,
-                links: this.state.links,
-                pageSize: this.state.pageSize,
-                onDialogOpen: this.onOpen,
-                onNavigate: this.onNavigate,
-                onDelete: this.onDelete,
-                onThumbClick: this.onThumbClick,
-                updatePageSize: this.updatePageSize};
-        let boardLink = '/'+this.props.params.boardName;
-        return (
-            <div>
-                <span><a href="/">Home</a></span>
-                <span><a href={boardLink}>{boardLink}</a></span>
-                <CreateDialog visible={this.state.createDialog}
-                              onClose={this.onClose}
-                              threadId={this.props.params.threadId}
-                              onCreate={this.onCreate}/>
-                <p/><p/>
-                {this.state.thread.attachments ? <Message onDialogOpen={this.onOpen} message={this.state.thread} board={false} onThumbClick={this.onThumbClick}/> : <p/>}
-                {this.state.items && this.state.items.length > 0 ?
-                    <ItemList params={params}/>
-                : <p/>}
-                <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
-                <div className="newCount">
-                  <ButtonToolbar>
-                      <Button onClick={this.onOpen} bsStyle="success" bsSize="xsmall">Reply</Button>
-                      <Button bsStyle="primary" bsSize="xsmall" onClick={this.loadNew}>Refresh <Badge title="Omitted replies">{this.state.newCount}</Badge></Button>
-                  </ButtonToolbar>
-                </div>
+      let params = this.props.params;
+      let thread = this.state.thread;
+      let threadView = thread.id ? <СThread key={thread.id} thread={thread} replies={this.state.replies}/> : null;
+      return (
+          <div className="chan-style">
+            <Breadcrumb>
+              <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+              <Breadcrumb.Item href={"/"+params.boardName}>{params.boardName}</Breadcrumb.Item>
+              <Breadcrumb.Item active href={"/"+params.boardName+"/thread/"+params.threadId}>{params.threadId}</Breadcrumb.Item>
+              <Breadcrumb.Item active={false}><Button onClick={this.onOpen} bsStyle="success" bsSize="xsmall">Reply</Button></Breadcrumb.Item>
+            </Breadcrumb>
+            {threadView}
+            <CreateDialog visible={this.state.createDialog}
+                          onClose={this.onClose}
+                          threadId={params.threadId}
+                          onCreate={this.onCreate}/>
+            <ContentViewer content={this.state.content} onThumbClick={this.onThumbClick}/>
+            <div className="newCount">
+              <Button bsStyle="primary" bsSize="xsmall" onClick={this.loadNew}>Refresh <Badge title="New replies">{this.state.newCount}</Badge></Button>
             </div>
-        )
+          </div>
+      )
     }
 }
 ThreadView.propTypes = {
