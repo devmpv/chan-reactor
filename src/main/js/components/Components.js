@@ -43,7 +43,7 @@ export const CPopover = ({threadId, messageId, render}) => {
 )}
 export const СMessage = ({message, controls, style, replies}) => {
   let repl = [];
-  for (var key in replies) {
+  for (let key in replies) {
     repl.push(replies[key]);
   }
   return(
@@ -59,9 +59,11 @@ export const СMessage = ({message, controls, style, replies}) => {
     </div>
 )}
 export const СThread = ({thread, replies}) => {
-  let messages = thread.messages.map(message =>
-    <СMessage key={message.id} message={message} controls={<div/>} style="message" replies={replies[message.id.toString()]}/>
-  )
+  let messages = [];
+  for (let key in thread.messages) {
+    let message = thread.messages[key];
+    messages.push(<СMessage key={message.id} message={message} controls={<div/>} style="message" replies={replies[message.id.toString()]}/>);
+  }
   return(
     <div>
       <СMessage message={thread} controls={<CThreadCtrl thread={thread}/>} style="op" replies={replies[thread.id.toString()]}/>

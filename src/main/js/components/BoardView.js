@@ -101,7 +101,7 @@ class BoardView extends React.Component {
   getThreadDetails(thread, index) {
       thread = this.createThumbs(thread);
       thread.text = Parser(thread.text);
-      thread.messages = [];
+      thread.messages = {};
       thread.count = 0;
       client({
           method: 'GET', path: previewPath, params: {
@@ -109,7 +109,10 @@ class BoardView extends React.Component {
           }
       }).done(preview => {
           for (let message of preview.entity._embedded.messages.reverse()) {
-              thread.messages[message.id] = this.parseText(this.createThumbs(message), thread, index);
+              thread.messages[message.id.toString()] = message;
+          }
+          for (let key in thread.messages) {
+              thread.messages[key] = this.parseText(this.createThumbs(thread.messages[key]), thread, 0);
           }
           client({
               method: 'GET', path: countPath, params: {

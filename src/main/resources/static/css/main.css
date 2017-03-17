@@ -110,11 +110,11 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
   border: none;
   padding: 0;
 }
-div.message-text p { margin: 0 auto}
-div.message-text ul { margin: 0 auto; padding: 0 40px; margin-bottom: 0px; float: left}
-div.message-text li { float: left}
-div.message-text br:after { content: "" }
-div.message-text br { content: "" }
+blockquote.message-text p { margin: 0 auto}
+blockquote.message-text ul { margin: 0 auto; padding: 0 40px; margin-bottom: 0px; float: left}
+blockquote.message-text li { float: left}
+blockquote.message-text br:after { content: "" }
+blockquote.message-text br { content: "" }
 
 .post {
 		margin: 0px 0px 4px 0px;

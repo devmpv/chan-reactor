@@ -53,7 +53,7 @@ class ThreadView extends React.Component {
             title: response.entity.title,
             text: response.entity.text,
             updated: response.entity.updated,
-            messages: []
+            messages: {}
           };
           thread = this.createThumbs(thread);
           thread.text = Parser(thread.text);
@@ -65,7 +65,10 @@ class ThreadView extends React.Component {
           }).done(reply => {
               let messages = reply.entity._embedded['messages'] ? reply.entity._embedded['messages'] : [];
               for (let message of messages.reverse()) {
-                  thread.messages[message.id] = this.parseText(this.createThumbs(message), thread, 0);
+                  thread.messages[message.id.toString()] = message;
+              }
+              for (let key in thread.messages) {
+                  thread.messages[key] = this.parseText(this.createThumbs(thread.messages[key]), thread, 0);
               }
               this.setState({
                   thread: thread,
