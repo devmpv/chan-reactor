@@ -19,7 +19,7 @@ export const CThreadCtrl = ({thread}) => {
   let badgeCount = thread.count-3 > 0 ? thread.count-3 : 0;
   return(<span>
     <Button bsSize="xsmall" bsStyle="default">-</Button>&nbsp;
-    <Button bsSize="xsmall" bsStyle="primary" href={window.location.pathname + "/thread/" + thread.id}>Open</Button>
+    <Button bsSize="xsmall" bsStyle="primary" href={'/' + thread.board + "/thread/" + thread.id}>Open</Button>
     {badgeCount > 0 ? <Badge title="Omitted replies" >{badgeCount}</Badge> : null}
   </span>
 )}
@@ -35,7 +35,7 @@ export const CThumbs = ({attachments, onThumbClick}) => {
   return(
       <div className="thumb-box">{thumbs}</div>
 )}
-export const CPopover = ({threadId, messageId, render}) => {
+export const CTrigger = ({threadId, messageId, render}) => {
   return(
     <OverlayTrigger rootClose trigger={['hover']} delayHide={5000} overlay={render(threadId, messageId)}>
       <a href={'#'+messageId}>{'>>'+messageId}</a>

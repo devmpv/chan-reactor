@@ -7,7 +7,7 @@ const stompClient = require('../websocket-listener');
 import {Popover, Breadcrumb, Button, ButtonToolbar, Badge} from 'react-bootstrap';
 import CreateDialog from "./CreateDialog";
 import ContentViewer from "./ContentViewer";
-import {СThread, CPopover, СMessage, CThumbs} from "./Components";
+import {СThread, CTrigger, СMessage, CThumbs} from "./Components";
 import Parser from 'html-react-parser';
 
 const root = '/rest/api';
@@ -53,6 +53,7 @@ class ThreadView extends React.Component {
             title: response.entity.title,
             text: response.entity.text,
             updated: response.entity.updated,
+            board: this.props.params.boardName,
             messages: {}
           };
           thread = this.createThumbs(thread);
@@ -80,11 +81,12 @@ class ThreadView extends React.Component {
     }
 
     renderPopover(index, messageId) {
+      messageId = messageId.toString();
       let thread = this.state.thread;
       let message = thread.id == messageId ? thread : thread.messages[messageId];
       return(
           <Popover bsClass="popover-custom" id={messageId}>
-            <СMessage message={message} controls={<div/>} style="message" replies={this.state.replies[messageId.toString()]}/>
+            <СMessage message={message} controls={<div/>} style="message" replies={this.state.replies[messageId]}/>
           </Popover>
       )
     }
@@ -103,9 +105,9 @@ class ThreadView extends React.Component {
               if (thread.messages[domNode.attribs.key] || thread.id == domNode.attribs.key) {
                 let id_string = domNode.attribs.key.toString();
                 let list = replies[id_string] ? replies[id_string] : {};
-                list[message.id.toString()] = <CPopover key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
+                list[message.id.toString()] = <CTrigger key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
                 replies[id_string] = list;
-                return <CPopover threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
+                return <CTrigger threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
               } else {
                 return <span>{'>>'+domNode.attribs.key}</span>
               }
@@ -212,7 +214,7 @@ class ThreadView extends React.Component {
             <Breadcrumb>
               <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
               <Breadcrumb.Item href={"/"+params.boardName}>{params.boardName}</Breadcrumb.Item>
-              <Breadcrumb.Item active href={"/"+params.boardName+"/thread/"+params.threadId}>{params.threadId}</Breadcrumb.Item>
+              <Breadcrumb.Item active href={"/"+params.boardName+"/thread/"+params.threadId}>{'#'+params.threadId}</Breadcrumb.Item>
               <Breadcrumb.Item active={false}><Button onClick={this.onOpen} bsStyle="success" bsSize="xsmall">Reply</Button></Breadcrumb.Item>
             </Breadcrumb>
             {threadView}

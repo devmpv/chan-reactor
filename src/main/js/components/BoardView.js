@@ -6,7 +6,7 @@ const client = require('../client');
 import {Popover, Breadcrumb, Button} from 'react-bootstrap';
 import CreateDialog from "./CreateDialog";
 import ContentViewer from "./ContentViewer";
-import {СThread, CPopover, СMessage, CThumbs} from "./Components";
+import {СThread, CTrigger, СMessage, CThumbs} from "./Components";
 import Parser from 'html-react-parser';
 
 const srcPath = '/src/attach/';
@@ -60,11 +60,12 @@ class BoardView extends React.Component {
   }
 
   renderPopover(index, messageId) {
+    messageId = messageId.toString();
     let thread = this.state.items[index];
-    let message = thread.id == messageId ? thread : thread.messages[messageId];
+    let message = thread.id.toString() == messageId ? thread : thread.messages[messageId];
     return(
         <Popover bsClass="popover-custom" id={messageId}>
-          <СMessage message={message} controls={<div/>} style="message" replies={this.state.replies[messageId.toString()]}/>
+          <СMessage message={message} controls={<div/>} style="message" replies={this.state.replies[messageId]}/>
         </Popover>
     )
   }
@@ -80,12 +81,11 @@ class BoardView extends React.Component {
     message.text = Parser(message.text,{
       replace: function(domNode)  {
           if (domNode.attribs && domNode.attribs.id === 'reply-link') {
-            if (thread.messages[domNode.attribs.key] || thread.id == domNode.attribs.key) {
-              let id_string = domNode.attribs.key.toString();
-              let list = replies[id_string] ? replies[id_string] : {};
-              list[message.id.toString()] = <CPopover key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
-              replies[id_string] = list;
-              return <CPopover threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
+            if (thread.messages[domNode.attribs.key] || thread.id.toString() == domNode.attribs.key) {
+              let list = replies[domNode.attribs.key] ? replies[domNode.attribs.key] : {};
+              list[message.id.toString()] = <CTrigger key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
+              replies[domNode.attribs.key] = list;
+              return <CTrigger threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
             } else {
               return <span>{'>>'+domNode.attribs.key}</span>
             }
@@ -103,6 +103,7 @@ class BoardView extends React.Component {
       thread.text = Parser(thread.text);
       thread.messages = {};
       thread.count = 0;
+      thread.board = this.props.params.boardName;
       client({
           method: 'GET', path: previewPath, params: {
               id: thread.id
