@@ -113,7 +113,7 @@ class BoardView extends React.Component {
               thread.messages[message.id.toString()] = message;
           }
           for (let key in thread.messages) {
-              thread.messages[key] = this.parseText(this.createThumbs(thread.messages[key]), thread, 0);
+              thread.messages[key] = this.parseText(this.createThumbs(thread.messages[key]), thread, index);
           }
           client({
               method: 'GET', path: countPath, params: {
