@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.PostPersist;
-import javax.persistence.PreRemove;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +44,6 @@ public class MessageEntityListener {
 		Map<String, Object> headers = new HashMap<>();
 		headers.put("thread", message.getThread().getId());
 		template.convertAndSend(MESSAGE_PREFIX + "/newMessage", getPath(message), headers);
-	}
-
-	@PreRemove
-	public void onPreRemove(Message message) {
-		message.getAttachments().forEach(attach -> {
-			if (attach.getMessages().size() == 1 && attach.getMessages().contains(message)) {
-				attachRepo.delete(attach);
-			}
-		});
 	}
 
 	@Autowired(required = true)

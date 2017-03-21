@@ -86,7 +86,7 @@ public class AttachmentService {
 		}
 	}
 
-	public void cleanup(Attachment attachment) {
+	public void cleanup(Attachment attachment) throws Exception {
 		Path mainPath = storagePath.resolve(attachment.getName());
 		Path thumbsPath = thumbPath.resolve(attachment.getName());
 		try {
@@ -95,7 +95,7 @@ public class AttachmentService {
 			if (Files.exists(thumbsPath))
 				Files.delete(thumbsPath);
 		} catch (IOException e) {
-			LOG.error("Error while deleting attachment image!", e);
+			throw new Exception("Error while deleting attachment image!", e);
 		}
 	}
 
