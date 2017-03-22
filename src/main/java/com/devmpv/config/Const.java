@@ -1,14 +1,51 @@
 package com.devmpv.config;
 
-public interface Const {
+/**
+ * Commonly used constants
+ * 
+ * @author devmpv
+ */
+public final class Const {
 
-	public interface Thumbs {
-		int WIDTH = 200;
-		int HEIGHT = 200;
+    /**
+     * Setting for thumbnail generation.
+     * 
+     * @author devmpv
+     */
+    public final class Thumbs {
+
+	/**
+	 * Thumbnail width
+	 */
+	public static final int WIDTH = 200;
+	/**
+	 * Thumbnail height
+	 */
+	public static final int HEIGHT = 200;
+
+	private Thumbs() {
 	}
+    }
 
-	String TITLE = "title";
-	String TEXT = "text";
-	String BOARD = "board";
-	String THREAD = "thread";
+    /**
+     * Message title field
+     */
+    public static final String TITLE = "title";
+
+    /**
+     * Message text field
+     */
+    public static final String TEXT = "text";
+    /**
+     * Message board field
+     */
+    public static final String BOARD = "board";
+
+    /**
+     * Message thread field
+     */
+    public static final String THREAD = "thread";
+
+    private Const() {
+    }
 }
