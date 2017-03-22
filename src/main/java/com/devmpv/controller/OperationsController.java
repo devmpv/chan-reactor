@@ -8,19 +8,21 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.devmpv.service.MessageService;
 
+/**
+ * Controller for handling new message/thread actions.
+ * 
+ * @author devmpv
+ *
+ */
 @BasePathAwareController
 public class OperationsController {
 
-	@Autowired
-	private MessageService messageService;
+    @Autowired
+    private MessageService messageService;
 
-	@PostMapping("/res/submit")
-	public ResponseEntity<?> handleNewMessage(MultipartHttpServletRequest request) {
-		try {
-			messageService.saveNew(request.getParameterMap(), request.getFileMap());
-		} catch (Exception e) {
-			return ResponseEntity.unprocessableEntity().body(e.getMessage());
-		}
-		return ResponseEntity.ok().build();
-	}
+    @PostMapping("/res/submit")
+    public ResponseEntity<Long> handleNewMessage(MultipartHttpServletRequest request) {
+	Long id = messageService.saveNew(request.getParameterMap(), request.getFileMap()).getId();
+	return ResponseEntity.ok(id);
+    }
 }

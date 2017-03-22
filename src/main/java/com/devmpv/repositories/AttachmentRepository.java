@@ -8,12 +8,18 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.devmpv.model.Attachment;
 
+/**
+ * Attachment repository.
+ * 
+ * @author devmpv
+ *
+ */
 public interface AttachmentRepository extends CrudRepository<Attachment, Serializable> {
-	@Query("select count(m) from Attachment a join a.messages m where a.id = ?1")
-	long countMessages(long id);
+    @Query("select count(m) from Attachment a join a.messages m where a.id = ?1")
+    long countMessages(long id);
 
-	Attachment findByMd5(String md5);
+    Attachment findByMd5(String md5);
 
-	@Query("select a from Attachment a where a.messages.size=0")
-	Set<Attachment> findEmpty();
+    @Query("select a from Attachment a where a.messages.size=0")
+    Set<Attachment> findEmpty();
 }

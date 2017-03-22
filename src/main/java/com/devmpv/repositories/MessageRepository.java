@@ -12,14 +12,20 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import com.devmpv.model.Message;
 import com.devmpv.model.Projections.InlineAttachments;
 
+/**
+ * Message repository.
+ * 
+ * @author devmpv
+ *
+ */
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
-	@RestResource(path = "count", rel = "messages")
-	Long countByThreadId(@Param("id") Long id);
+    @RestResource(path = "count", rel = "messages")
+    Long countByThreadId(@Param("id") Long id);
 
-	@RestResource(path = "thread", rel = "messages")
-	Page<?> findByThreadIdOrderByIdAsc(@Param("id") Long id, Pageable page);
+    @RestResource(path = "thread", rel = "messages")
+    Page<Message> findByThreadIdOrderByIdAsc(@Param("id") Long id, Pageable page);
 
-	@RestResource(path = "preview", rel = "messages")
-	List<Message> findTop3ByThreadIdOrderByIdDesc(@Param("id") Long id);
+    @RestResource(path = "preview", rel = "messages")
+    List<Message> findTop3ByThreadIdOrderByIdDesc(@Param("id") Long id);
 }

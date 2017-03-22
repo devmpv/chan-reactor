@@ -2,20 +2,28 @@ package com.devmpv.model;
 
 import java.util.List;
 
+/**
+ * POJO fom thread preview
+ * 
+ * @author devmpv
+ *
+ */
 public class ThreadPreview {
-	private long count;
-	private List<?> messages;
 
-	public ThreadPreview(long count, List<?> messages) {
-		this.count = count;
-		this.messages = messages;
-	}
+    private long count;
 
-	public long getCount() {
-		return count;
-	}
+    private List<Message> messages;
 
-	public List<?> getMessages() {
-		return messages;
-	}
+    public ThreadPreview(long count, List<Message> messages) {
+	this.count = count;
+	this.messages = messages;
+    }
+
+    public long getCount() {
+	return count;
+    }
+
+    public List<Message> getMessages() {
+	return messages;
+    }
 }

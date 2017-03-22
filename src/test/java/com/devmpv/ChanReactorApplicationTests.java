@@ -5,10 +5,19 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+/**
+ * Main test class.
+ * 
+ * @author devmpv
+ *
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ChanReactorApplicationTests {
 
+	/**
+	 * Default test method
+	 */
 	@Test
 	public void contextLoads() {
 	}

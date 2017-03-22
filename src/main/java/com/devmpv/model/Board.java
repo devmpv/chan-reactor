@@ -8,41 +8,47 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+/**
+ * Entity containing Information about board.
+ * 
+ * @author devmpv
+ *
+ */
 @Entity
 public class Board {
-	@Id
-	private String id;
+    @Id
+    private String id;
 
-	private String title;
+    private String title;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "board")
-	private Set<Thread> threads;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "board")
+    private Set<Thread> threads;
 
-	public Board() {
-	}
+    protected Board() {
+    }
 
-	public Board(String id, String title) {
-		this.id = id;
-		this.title = title;
-	}
+    public Board(String id, String title) {
+	this.id = id;
+	this.title = title;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+	return id;
+    }
 
-	public Set<Thread> getThreads() {
-		return threads;
-	}
+    public Set<Thread> getThreads() {
+	return threads;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+	return title;
+    }
 
-	public void setThreads(Set<Thread> threads) {
-		this.threads = threads;
-	}
+    public void setThreads(Set<Thread> threads) {
+	this.threads = threads;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+	this.title = title;
+    }
 }

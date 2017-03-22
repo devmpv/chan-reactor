@@ -4,7 +4,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * Configuration Created by devmpv on 09.12.16.
+ * Global application configuration.
+ * 
+ * @author devmpv
+ *
  */
 @Configuration
 @EnableScheduling

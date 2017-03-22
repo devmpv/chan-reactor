@@ -13,12 +13,18 @@ import com.devmpv.model.Board;
 import com.devmpv.model.Projections.InlineAttachments;
 import com.devmpv.model.Thread;
 
+/**
+ * Thread repository
+ * 
+ * @author devmpv
+ *
+ */
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface ThreadRepository extends PagingAndSortingRepository<Thread, Long> {
-	long countByBoard(Board board);
+    long countByBoard(Board board);
 
-	List<Thread> findByBoardOrderByUpdatedAsc(Board board);
+    List<Thread> findByBoardOrderByUpdatedAsc(Board board);
 
-	@RestResource(path = "board", rel = "threads")
-	Page<?> findByBoardOrderByUpdatedDesc(@Param("uri") Board board, Pageable page);
+    @RestResource(path = "board", rel = "threads")
+    Page<Thread> findByBoardOrderByUpdatedDesc(@Param("uri") Board board, Pageable page);
 }
