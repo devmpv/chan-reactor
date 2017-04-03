@@ -31,6 +31,9 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
 }
 /*Various classes*/
 .dropzone {
+    display:flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 50px;
     border-width: 2px;

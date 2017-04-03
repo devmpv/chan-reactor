@@ -27,9 +27,4 @@ class ContentViewer extends React.Component {
     }
 }
 
-ContentViewer.propTypes = {
-    content: React.PropTypes.object.isRequired,
-    onThumbClick: React.PropTypes.func.isRequired
-}
-
 export default ContentViewer;
