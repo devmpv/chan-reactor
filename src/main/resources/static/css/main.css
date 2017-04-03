@@ -30,12 +30,19 @@ a:hover, .a-link-emulator:hover{color:#de7800;}
   border: solid 1px #444444;
 }
 /*Various classes*/
+.dropzone {
+    width: 100%;
+    height: 50px;
+    border-width: 2px;
+    border-color: #CCCCCC;
+    border-style: dashed;
+    border-radius: 2px;
+}
 .create-dialog {
   min-width: 300px;
 }
 .editor-wrapper {
-  display: block;
-  height: 150px;
+  min-height: 150px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -115,7 +122,6 @@ blockquote.message-text ul { margin: 0 auto; padding: 0 40px; margin-bottom: 0px
 blockquote.message-text li { float: left}
 blockquote.message-text br:after { content: "" }
 blockquote.message-text br { content: "" }
-
 .post {
 		margin: 0px 0px 4px 0px;
 		overflow: visible;

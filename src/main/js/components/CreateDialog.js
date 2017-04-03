@@ -104,16 +104,14 @@ class CreateDialog extends React.Component {
                           </div>
                       </FormGroup>
                       <div>
-                          <Dropzone onDrop={this.onDrop} maxSize={1048576} accept="image/*">
-                              <div>Try dropping some files here, or click to select files to
-                                  upload.
-                              </div>
+                          <Dropzone className="dropzone" onDrop={this.onDrop} maxSize={1048576} accept="image/*">
+                              <div>Try dropping some files here, or click to select files to upload.</div>
                           </Dropzone>
                           {this.state.files.length > 0 ? <div>
                               Uploading {this.state.files.length} file(s)...
                               <div>
                                   {this.state.files.map((file) =>
-                                      <img key={file.name}
+                                      <img className="thumb" key={file.name}
                                            src={file.preview}
                                            width="100px"
                                            height="100px"
