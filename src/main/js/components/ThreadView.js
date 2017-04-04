@@ -52,6 +52,7 @@ class ThreadView extends React.Component {
             attachments: response.entity.attachments,
             title: response.entity.title,
             text: response.entity.text,
+            timestamp: response.entity.timestamp,
             updated: response.entity.updated,
             board: this.props.params.boardName,
             messages: {}
