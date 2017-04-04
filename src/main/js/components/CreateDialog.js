@@ -80,7 +80,7 @@ class CreateDialog extends React.Component {
             console.log(rejectedFiles);
         }
         this.setState({
-            files: acceptedFiles
+            files: acceptedFiles.slice(0,4)
         });
     }
 
