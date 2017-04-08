@@ -61,6 +61,22 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.10.2</version>
 		</dependency>
+		<dependency>
+		    <groupId>eu.michael-simons</groupId>
+		    <artifactId>java-oembed</artifactId>
+		    <version>0.5.8</version>
+		    <exclusions>
+              <exclusion>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+              </exclusion>
+            </exclusions>
+		</dependency>
+		<dependency>
+		    <groupId>org.nibor.autolink</groupId>
+		    <artifactId>autolink</artifactId>
+		    <version>0.6.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -7,10 +7,12 @@ import static com.devmpv.config.Const.TITLE;
 import static com.devmpv.config.WebSocketConfig.MESSAGE_PREFIX;
 
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +21,10 @@ import javax.transaction.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.safety.Whitelist;
+import org.nibor.autolink.Autolink;
+import org.nibor.autolink.LinkExtractor;
+import org.nibor.autolink.LinkSpan;
+import org.nibor.autolink.LinkType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityLinks;
@@ -34,6 +40,9 @@ import com.devmpv.model.Thread;
 import com.devmpv.repositories.BoardRepository;
 import com.devmpv.repositories.MessageRepository;
 import com.devmpv.repositories.ThreadRepository;
+
+import ac.simons.oembed.OembedResponse;
+import ac.simons.oembed.OembedService;
 
 /**
  * Service to manage basic message operations.
@@ -65,6 +74,10 @@ public class MessageService {
     private SimpMessagingTemplate template;
     @Autowired
     private EntityLinks entityLinks;
+    @Autowired
+    private OembedService oembedService;
+
+    private LinkExtractor linkExtractor = LinkExtractor.builder().linkTypes(EnumSet.of(LinkType.URL)).build();
 
     private OutputSettings textSettings = new OutputSettings();
 
@@ -84,9 +97,18 @@ public class MessageService {
     }
 
     private String prepareText(String input) {
-	String cleanHtml = Jsoup.clean(input, "", Whitelist.basic(), textSettings);
-	cleanHtml = cleanHtml.replaceAll("&gt;&gt;([0-9]{1,8})", "<a id='reply-link' key='$1'>$1</a>");
-	return cleanHtml;
+	String result = Jsoup.clean(input, "", Whitelist.basic(), textSettings);
+	result = input.replaceAll("&gt;&gt;([0-9]{1,8})", "<a id='reply-link' key='$1'>$1</a>");
+	Iterable<LinkSpan> links = linkExtractor.extractLinks(result);
+	result = Autolink.renderLinks(result, links, (link, text, sb) -> {
+	    String url = text.subSequence(link.getBeginIndex(), link.getEndIndex()).toString();
+	    Optional<OembedResponse> response = oembedService.getOembedResponseFor(url);
+	    sb.append("<a href=\"").append(url).append("\">").append(url).append("</a>");
+	    if (response.isPresent()) {
+		sb.append("<div>").append(response.get().getHtml()).append("</div>");
+	    }
+	});
+	return result;
     }
 
     private Message saveAttachments(Message message, Map<String, MultipartFile> files) {
