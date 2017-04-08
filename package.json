@@ -21,6 +21,7 @@
   "homepage": "https://github.com/devmpv/chan-reactor",
   "dependencies": {
     "draft-js": "^0.10.0",
+    "draftjs-to-html": "^0.7.0",
     "html-react-parser": "^0.3.3",
     "net": "^1.0.2",
     "react": "^15.4.2",
