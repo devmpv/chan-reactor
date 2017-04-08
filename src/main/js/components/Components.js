@@ -52,7 +52,7 @@ export const СMessage = ({message, controls, style, replies}) => {
         <СHeader message={message} controls={controls}/>
         <div className="message-body">
           {message.thumbs}
-          <blockquote className="message-text">{message.text}</blockquote>
+          <blockquote id="message-text" className="message-text">{message.text}</blockquote>
         </div>
         {repl.length > 0 ? <div className="replies">Replies: {repl}</div> : null}
       </div>

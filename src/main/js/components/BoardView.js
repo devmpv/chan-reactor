@@ -185,8 +185,12 @@ class BoardView extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
       this.loadFromServer(this.state.pageSize);
+  }
+
+  componentDidMount() {
+      
   }
 
   render() {

@@ -20,15 +20,15 @@ class ThreadView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            thread: {},
-            createDialog: false,
-            replies: {},
-            pageSize: 500,
-            newCount: 0,
-            content: {
-                src: "/img/redo.png",
-                visible: false
-            }
+          thread: {},
+          createDialog: false,
+          replies: {},
+          pageSize: 500,
+          newCount: 0,
+          content: {
+              src: "/img/redo.png",
+              visible: false
+          }
         };
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
@@ -101,18 +101,18 @@ class ThreadView extends React.Component {
       let replies = this.state.replies;
       let renderPopover = this.renderPopover;
       message.text = Parser(message.text,{
-        replace: function(domNode)  {
-            if (domNode.attribs && domNode.attribs.id === 'reply-link') {
-              if (thread.messages[domNode.attribs.key] || thread.id == domNode.attribs.key) {
-                let id_string = domNode.attribs.key.toString();
-                let list = replies[id_string] ? replies[id_string] : {};
-                list[message.id.toString()] = <CTrigger key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
-                replies[id_string] = list;
-                return <CTrigger threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
-              } else {
-                return <span>{'>>'+domNode.attribs.key}</span>
-              }
+        replace: function(domNode) {
+          if (domNode.attribs && domNode.attribs.id === 'reply-link') {
+            if (thread.messages[domNode.attribs.key] || thread.id == domNode.attribs.key) {
+              let id_string = domNode.attribs.key.toString();
+              let list = replies[id_string] ? replies[id_string] : {};
+              list[message.id.toString()] = <CTrigger key={message.id} threadId={index} messageId={message.id} render={renderPopover}/>;
+              replies[id_string] = list;
+              return <CTrigger threadId={index} messageId={domNode.attribs.key} render={renderPopover}/>
+            } else {
+              return <span>{'>>'+domNode.attribs.key}</span>
             }
+          }
         }
       });
       this.setState({
@@ -198,7 +198,7 @@ class ThreadView extends React.Component {
         });
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.loadFromServer(this.state.pageSize);
         let headers = {selector: "headers['nativeHeaders']['thread'][0] == '" + this.props.params.threadId+"'"};
       	stompClient.register([

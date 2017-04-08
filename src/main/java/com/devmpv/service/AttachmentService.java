@@ -56,22 +56,20 @@ public class AttachmentService {
 	try {
 	    md5 = String.valueOf(DigestUtils.md5DigestAsHex(value.getInputStream()));
 	    attach = repo.findByMd5(md5);
-	    if (null != attach) {
-		return attach;
+	    if (null == attach) {
+		String savedName = md5.concat(getExtension(value.getOriginalFilename()));
+		Path savedPath = storagePath.resolve(savedName);
+		if (!savedPath.toFile().exists()) {
+		    Files.copy(value.getInputStream(), savedPath);
+		}
+		if (!thumbPath.resolve(savedName).toFile().exists()) {
+		    createThumbnail(value.getInputStream(), savedName);
+		}
+		attach = new Attachment();
+		attach.setMd5(md5);
+		attach.setName(savedName);
+		attach = repo.save(attach);
 	    }
-	    String savedName = md5.concat(getExtension(value.getOriginalFilename()));
-	    Path savedPath = storagePath.resolve(savedName);
-	    if (!savedPath.toFile().exists()) {
-		Files.copy(value.getInputStream(), savedPath);
-	    }
-	    if (!thumbPath.resolve(savedName).toFile().exists()) {
-		createThumbnail(value.getInputStream(), savedName);
-	    }
-	    attach = new Attachment();
-	    attach.setMd5(md5);
-	    attach.setName(savedName);
-	    attach = repo.save(attach);
-	    return attach;
 	} catch (IOException e) {
 	    LOG.error("Error saving attachment", e);
 	    throw new IOException("Error saving attachment", e);
@@ -80,6 +78,7 @@ public class AttachmentService {
 		Files.deleteIfExists(storagePath.resolve(md5));
 	    }
 	}
+	return attach;
     }
 
     private void checkPathExists(Path path) throws IOException {
