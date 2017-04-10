@@ -53,6 +53,9 @@ import ac.simons.oembed.OembedService;
 @Service
 public class MessageService {
 
+    private static final String REPLY_STRING = "&gt;&gt;([0-9]{1,8})";
+    private static final String REPLY_REPLACE = "<a id='reply-link' key='$1'>$1</a>";
+
     @Value("${chan.message.maxCount}")
     private int messageMaxCount;
 
@@ -97,8 +100,7 @@ public class MessageService {
     }
 
     private String prepareText(String input) {
-	String result = Jsoup.clean(input, "", Whitelist.basic(), textSettings);
-	result = input.replaceAll("&gt;&gt;([0-9]{1,8})", "<a id='reply-link' key='$1'>$1</a>");
+	String result = Jsoup.clean(input, "", Whitelist.basic(), textSettings).replaceAll(REPLY_STRING, REPLY_REPLACE);
 	Iterable<LinkSpan> links = linkExtractor.extractLinks(result);
 	result = Autolink.renderLinks(result, links, (link, text, sb) -> {
 	    String url = text.subSequence(link.getBeginIndex(), link.getEndIndex()).toString();
