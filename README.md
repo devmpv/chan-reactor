@@ -1,4 +1,4 @@
-chan-reactor [![](http://chanreactor.top:8080/buildStatus/icon?job=chan)](http://chanreactor.top:8080/job/chan/)
+chan-reactor [![](http://chanreactor.top:8080/buildStatus/icon?job=chan)](http://chanreactor.top:8080/job/chan/) [![](https://sonarqube.com/api/badges/gate?key=com.devmpv:chan-reactor)](https://sonarqube.com/dashboard?id=com.devmpv%3Achan-reactor) 
 =========
 Chan-reactor is a anonymous imageboard engine based on Java and React. Demo accessible here: [DEMO](http://chanreactor.top:9090)
 
