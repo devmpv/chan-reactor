@@ -1,6 +1,6 @@
 chan-reactor [![](http://chanreactor.top:8080/buildStatus/icon?job=chan)](http://chanreactor.top:8080/job/chan/)
 =========
-Chan-reactor is a anonymous imageboard engine based on Java and React. Demo accessible here: [DEMO](chanreactor.top:9090)
+Chan-reactor is a anonymous imageboard engine based on Java and React. Demo accessible here: [DEMO](http://chanreactor.top:9090)
 
 Technologies and libraries used in project: 
 * [spring-boot](http://projects.spring.io/spring-boot/)
