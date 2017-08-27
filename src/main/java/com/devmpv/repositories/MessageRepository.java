@@ -1,7 +1,9 @@
 package com.devmpv.repositories;
 
 import java.util.List;
+import java.util.Set;
 
+import com.devmpv.model.Thread;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -29,4 +31,7 @@ public interface MessageRepository extends PagingAndSortingRepository<Message, L
 
     @RestResource(path = "preview", rel = "messages")
     List<Message> findTop3ByThreadIdOrderByIdDesc(@Param("id") Long id);
+
+    @RestResource(exported = false)
+    Set<Message> findByThreadAndIdIn(Thread thread, Set<Long> ids);
 }
