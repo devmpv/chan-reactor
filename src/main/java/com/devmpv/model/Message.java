@@ -1,30 +1,17 @@
 package com.devmpv.model;
 
+import javax.persistence.*;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 /**
  * Base entity for messages
- * 
- * @author devmpv
  *
+ * @author devmpv
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Message {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,6 +19,10 @@ public class Message {
     @ManyToOne
     @JoinColumn
     private Thread thread;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "message_replies")
+    private Set<Message> replies;
 
     private String title;
 
@@ -50,65 +41,73 @@ public class Message {
     private Set<Attachment> attachments;
 
     public Message() {
-	super();
+        super();
     }
 
     public Message(String title, String text) {
-	setTitle(title);
-	setText(text);
-	setTimestamp(System.currentTimeMillis());
-	setUpdated(System.currentTimeMillis());
+        setTitle(title);
+        setText(text);
+        setTimestamp(System.currentTimeMillis());
+        setUpdated(System.currentTimeMillis());
+    }
+
+    public Set<Message> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(Set<Message> replies) {
+        this.replies = replies;
     }
 
     public Set<Attachment> getAttachments() {
-	return attachments;
+        return attachments;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public String getText() {
-	return text;
+        return text;
     }
 
     public Thread getThread() {
-	return thread;
+        return thread;
     }
 
     public Long getTimestamp() {
-	return timestamp;
+        return timestamp;
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public Long getUpdated() {
-	return updated;
+        return updated;
     }
 
     public void setAttachments(Set<Attachment> attachments) {
-	this.attachments = attachments;
+        this.attachments = attachments;
     }
 
     public void setText(String text) {
-	this.text = text;
+        this.text = text;
     }
 
     public void setThread(Thread thread) {
-	this.thread = thread;
+        this.thread = thread;
     }
 
     public void setTimestamp(Long timestamp) {
-	this.timestamp = timestamp;
+        this.timestamp = timestamp;
     }
 
     public void setTitle(String title) {
-	this.title = title;
+        this.title = title;
     }
 
     public void setUpdated(Long updated) {
-	this.updated = updated;
+        this.updated = updated;
     }
 }

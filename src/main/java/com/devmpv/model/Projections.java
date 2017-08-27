@@ -5,8 +5,10 @@ import java.util.Set;
 import org.springframework.data.rest.core.config.Projection;
 
 public interface Projections {
+
 	@Projection(name = "inlineAttachments", types = { Thread.class, Message.class })
-	public interface InlineAttachments {
+    interface InlineAttachments {
+
 		Set<Attachment> getAttachments();
 
 		long getId();
