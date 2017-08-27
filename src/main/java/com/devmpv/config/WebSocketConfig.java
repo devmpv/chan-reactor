@@ -20,12 +20,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-	registry.enableSimpleBroker(MESSAGE_PREFIX);
-	registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker(MESSAGE_PREFIX);
+        registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-	registry.addEndpoint("/chan").withSockJS();
+	    registry.addEndpoint("/chan").withSockJS();
     }
 }

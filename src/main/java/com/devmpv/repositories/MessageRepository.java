@@ -20,6 +20,7 @@ import com.devmpv.model.Projections.InlineAttachments;
  */
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
+
     @RestResource(path = "count", rel = "messages")
     Long countByThreadId(@Param("id") Long id);
 

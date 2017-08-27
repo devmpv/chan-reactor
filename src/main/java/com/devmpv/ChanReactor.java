@@ -12,11 +12,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ChanReactor {
 
     protected ChanReactor() {
-	super();
+	    super();
     }
 
     public static void main(final String[] args) {
-	SpringApplication.run(ChanReactor.class, args);
+	    SpringApplication.run(ChanReactor.class, args);
     }
 
 }

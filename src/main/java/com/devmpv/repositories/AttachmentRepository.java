@@ -15,8 +15,9 @@ import com.devmpv.model.Attachment;
  *
  */
 public interface AttachmentRepository extends CrudRepository<Attachment, Serializable> {
+
     @Query("select count(m) from Attachment a join a.messages m where a.id = ?1")
-    long countMessages(long id);
+    Long countMessages(long id);
 
     Attachment findByMd5(String md5);
 
