@@ -15,15 +15,15 @@ public class ThreadPreview {
     private List<Message> messages;
 
     public ThreadPreview(long count, List<Message> messages) {
-	this.count = count;
-	this.messages = messages;
+        this.count = count;
+        this.messages = messages;
     }
 
     public long getCount() {
-	return count;
+	    return count;
     }
 
     public List<Message> getMessages() {
-	return messages;
+	    return messages;
     }
 }

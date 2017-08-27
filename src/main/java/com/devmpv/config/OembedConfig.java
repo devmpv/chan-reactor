@@ -37,15 +37,16 @@ public class OembedConfig {
 
     @Bean
     public OembedService oembedService(HttpClient httpClient, CacheManager cacheManager) {
-	final OembedService oembedService = new OembedService(httpClient, cacheManager, endpoints, "chan");
-	oembedService.setAutodiscovery(this.autodiscovery);
-	if (this.cacheName != null) {
-	    oembedService.setCacheName(cacheName);
-	}
-	if (this.defaultCacheAge != null) {
-	    oembedService.setDefaultCacheAge(defaultCacheAge);
-	}
-	return oembedService;
+
+        final OembedService oembedService = new OembedService(httpClient, cacheManager, endpoints, "chan");
+            oembedService.setAutodiscovery(this.autodiscovery);
+        if (this.cacheName != null) {
+            oembedService.setCacheName(cacheName);
+        }
+        if (this.defaultCacheAge != null) {
+            oembedService.setDefaultCacheAge(defaultCacheAge);
+        }
+        return oembedService;
     }
 
     public void setAutodiscovery(boolean autodiscovery) {

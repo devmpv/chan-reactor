@@ -30,23 +30,23 @@ public class Thread extends Message {
     }
 
     public Thread(Board board, String title, String text) {
-	super(title, text);
-	this.board = board;
+        super(title, text);
+        this.board = board;
     }
 
     public Board getBoard() {
-	return board;
+	    return board;
     }
 
     public Set<Message> getMessages() {
-	return messages;
+	    return messages;
     }
 
     public void setBoard(Board board) {
-	this.board = board;
+	    this.board = board;
     }
 
     public void setMessages(Set<Message> messages) {
-	this.messages = messages;
+	    this.messages = messages;
     }
 }

@@ -15,8 +15,9 @@ import com.devmpv.model.Thread;
  */
 @Configuration
 public class RepositoryConfig extends RepositoryRestConfigurerAdapter {
+
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-	config.exposeIdsFor(Board.class, Thread.class, Message.class);
+	    config.exposeIdsFor(Board.class, Thread.class, Message.class);
     }
 }

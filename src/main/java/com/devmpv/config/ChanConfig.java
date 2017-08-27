@@ -20,11 +20,11 @@ public class ChanConfig {
 
     @Bean
     public CacheManager cacheManager() {
-	return CacheManager.create();
+	    return CacheManager.create();
     }
 
     @Bean
     public HttpClient httpClient() {
-	return HttpClientBuilder.create().build();
+	    return HttpClientBuilder.create().build();
     }
 }

@@ -8,26 +8,6 @@ package com.devmpv.config;
 public final class Const {
 
     /**
-     * Setting for thumbnail generation.
-     * 
-     * @author devmpv
-     */
-    public final class Thumbs {
-
-	/**
-	 * Thumbnail width
-	 */
-	public static final int WIDTH = 200;
-	/**
-	 * Thumbnail height
-	 */
-	public static final int HEIGHT = 200;
-
-	private Thumbs() {
-	}
-    }
-
-    /**
      * Message title field
      */
     public static final String TITLE = "title";
@@ -36,6 +16,7 @@ public final class Const {
      * Message text field
      */
     public static final String TEXT = "text";
+
     /**
      * Message board field
      */
@@ -47,5 +28,26 @@ public final class Const {
     public static final String THREAD = "thread";
 
     private Const() {
+    }
+
+    /**
+     * Setting for thumbnail generation.
+     *
+     * @author devmpv
+     */
+    public final class Thumbs {
+
+        /**
+         * Thumbnail width
+         */
+        public static final int WIDTH = 200;
+
+        /**
+         * Thumbnail height
+         */
+        public static final int HEIGHT = 200;
+
+        private Thumbs() {
+        }
     }
 }

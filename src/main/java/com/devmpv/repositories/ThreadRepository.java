@@ -21,10 +21,11 @@ import com.devmpv.model.Thread;
  */
 @RepositoryRestResource(excerptProjection = InlineAttachments.class)
 public interface ThreadRepository extends PagingAndSortingRepository<Thread, Long> {
-    long countByBoard(Board board);
+
+    Long countByBoard(Board board);
 
     List<Thread> findByBoardOrderByUpdatedAsc(Board board);
 
-    @RestResource(path = "board", rel = "threads")
-    Page<Thread> findByBoardOrderByUpdatedDesc(@Param("uri") Board board, Pageable page);
+    @RestResource(path = "findByBoardId", rel = "threads")
+    Page<Thread> findByBoardIdOrderByUpdatedDesc(@Param("boardId") String boardId, Pageable page);
 }
