@@ -42,11 +42,16 @@ import static com.devmpv.config.WebSocketConfig.MESSAGE_PREFIX;
 @Service
 public class MessageService {
 
-    private static final String REPLY_STRING = "&gt;&gt;([0-9]{1,8})";
+    private static final String REPLY_QUOTE = "&gt;&gt;(%s)";
+    private static final String REPLY_STRING = String.format(REPLY_QUOTE, "[0-9]{1,8}");
     private static final String REPLY_REPLACE = "<a id='reply-link' key='$1'>$1</a>";
 
     private final Pattern pattern = Pattern.compile(REPLY_STRING);
-    
+
+    private final LinkExtractor linkExtractor = LinkExtractor.builder().linkTypes(EnumSet.of(LinkType.URL)).build();
+
+    private final OutputSettings textSettings = new OutputSettings();
+
     private final ThreadRepository threadRepo;
 
     private final MessageRepository messageRepo;
@@ -60,10 +65,6 @@ public class MessageService {
     private final EntityLinks entityLinks;
 
     private final OembedService oembedService;
-
-    private final LinkExtractor linkExtractor = LinkExtractor.builder().linkTypes(EnumSet.of(LinkType.URL)).build();
-
-    private final OutputSettings textSettings = new OutputSettings();
 
     @Value("${chan.message.maxCount}")
     private int messageMaxCount;
@@ -106,19 +107,27 @@ public class MessageService {
         textSettings.prettyPrint(false);
     }
 
-    private Set<Message> findMentions(String text, Thread thread) {
+    private Message parseMentions(Message message, Thread thread) {
+        String text = message.getText();
         Matcher matcher = pattern.matcher(text);
         Set<Long> replyIds = new HashSet<>();
         while (matcher.find()) {
             replyIds.add(Long.parseLong(matcher.group(1)));
         }
-        return messageRepo.findByThreadAndIdIn(thread, replyIds);
+        Set<Message> mentions = messageRepo.findByThreadAndIdIn(thread, replyIds);
+        if (replyIds.contains(thread.getId())) {
+            mentions.add(thread);
+        }
+        for (Message m : mentions) {
+            text = text.replaceAll(String.format(REPLY_QUOTE, String.valueOf(m.getId())), REPLY_REPLACE);
+        };
+        message.setText(text);
+        message.setReplyTo(mentions);
+        return message;
     }
 
     private String parseText(String input) {
         String result = Jsoup.clean(input, "", Whitelist.basic(), textSettings);
-
-        result = result.replaceAll(REPLY_STRING, REPLY_REPLACE);
 
         Iterable<LinkSpan> links = linkExtractor.extractLinks(result);
         result = Autolink.renderLinks(result, links, (link, text, sb) -> {
@@ -161,11 +170,7 @@ public class MessageService {
         if (count >= messageMaxCount) {
             throw new CRException("Thread limit exceeded!");
         }
-        message = messageRepo.save(message);
-        for (Message m: findMentions(text, thread)) {
-            m.getReplies().add(message);
-            messageRepo.save(message);
-        }
+        message = messageRepo.save(parseMentions(message, thread));
         return message;
     }
 

@@ -2,6 +2,7 @@ package com.devmpv.model;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Base entity for messages
@@ -20,9 +21,19 @@ public class Message {
     @JoinColumn
     private Thread thread;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "message_replies")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "message_replies",
+            joinColumns={@JoinColumn(name="ParentId")},
+            inverseJoinColumns={@JoinColumn(name="MessageId")})
     private Set<Message> replies;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "message_replies",
+            joinColumns={@JoinColumn(name="MessageId")},
+            inverseJoinColumns={@JoinColumn(name="ParentId")})
+    private Set<Message> replyTo;
 
     private String title;
 
@@ -49,6 +60,18 @@ public class Message {
         setText(text);
         setTimestamp(System.currentTimeMillis());
         setUpdated(System.currentTimeMillis());
+    }
+
+    public Set<Long> getReplyIds() {
+        return replies.stream().map(r -> r.getId()).collect(Collectors.toSet());
+    }
+
+    public Set<Message> getReplyTo() {
+        return replyTo;
+    }
+
+    public void setReplyTo(Set<Message> replyTo) {
+        this.replyTo = replyTo;
     }
 
     public Set<Message> getReplies() {
