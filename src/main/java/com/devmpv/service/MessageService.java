@@ -22,10 +22,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -120,7 +120,7 @@ public class MessageService {
         }
         for (Message m : mentions) {
             text = text.replaceAll(String.format(REPLY_QUOTE, String.valueOf(m.getId())), REPLY_REPLACE);
-        };
+        }
         message.setText(text);
         message.setReplyTo(mentions);
         return message;
@@ -158,13 +158,13 @@ public class MessageService {
     }
 
     private Message saveMessage(Map<String, String[]> params, Map<String, MultipartFile> files, String text) {
-        Thread thread = threadRepo.findOne(Long.valueOf(params.get(THREAD)[0]));
+        Thread thread = threadRepo.findById(Long.valueOf(params.get(THREAD)[0])).get();
         Message message = new Message(params.get(TITLE)[0], parseText(text));
         message.setThread(thread);
         saveAttachments(message, files);
         long count = messageRepo.countByThreadId(thread.getId());
         if (count < messageBumpLimit) {
-            thread.setUpdated(message.getTimestamp());
+            thread.setUpdatedAt(message.getCreatedAt());
             threadRepo.save(thread);
         }
         if (count >= messageMaxCount) {
@@ -188,10 +188,10 @@ public class MessageService {
 
     private Thread saveThread(Map<String, String[]> params, Map<String, MultipartFile> files, String text) {
         String parsedText = parseText(text);
-        Board board = boardRepo.findOne(params.get(BOARD)[0]);
+        Board board = boardRepo.findById(params.get(BOARD)[0]).get();
         long count = threadRepo.countByBoard(board);
         if (count >= threadMaxCount) {
-            List<Thread> threads = threadRepo.findByBoardOrderByUpdatedAsc(board);
+            List<Thread> threads = threadRepo.findByBoardOrderByUpdatedAtAsc(board);
             for (int i = 0; i < count - (threadMaxCount - 1); i++) {
                 threadRepo.delete(threads.get(i));
             }

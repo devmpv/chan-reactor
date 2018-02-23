@@ -24,8 +24,8 @@ public interface ThreadRepository extends PagingAndSortingRepository<Thread, Lon
 
     Long countByBoard(Board board);
 
-    List<Thread> findByBoardOrderByUpdatedAsc(Board board);
+    List<Thread> findByBoardOrderByUpdatedAtAsc(Board board);
 
     @RestResource(path = "findByBoardId", rel = "threads")
-    Page<Thread> findByBoardIdOrderByUpdatedDesc(@Param("boardId") String boardId, Pageable page);
+    Page<Thread> findByBoardIdOrderByUpdatedAtDesc(@Param("boardId") String boardId, Pageable page);
 }

@@ -26,13 +26,13 @@ public class DatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-	if (!boardRepo.exists("b")) {
+	if (!boardRepo.existsById("b")) {
 	    this.boardRepo.save(new Board("b", "Anything"));
 	}
-	if (!boardRepo.exists("po")) {
+	if (!boardRepo.existsById("po")) {
 	    this.boardRepo.save(new Board("po", "Politics"));
 	}
-	if (!boardRepo.exists("dev")) {
+	if (!boardRepo.existsById("dev")) {
 	    this.boardRepo.save(new Board("dev", "Development"));
 	}
     }

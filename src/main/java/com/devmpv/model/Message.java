@@ -1,6 +1,7 @@
 package com.devmpv.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,15 +38,15 @@ public class Message {
 
     private String title;
 
-    @Lob
     @Column(nullable = false)
+    @Size(min = 1, max = 65535)
     private String text;
 
     @Column(nullable = false)
-    private Long timestamp;
+    private Long createdAt;
 
     @Column(nullable = false)
-    private Long updated;
+    private Long updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "message_attachment")
@@ -58,12 +59,12 @@ public class Message {
     public Message(String title, String text) {
         setTitle(title);
         setText(text);
-        setTimestamp(System.currentTimeMillis());
-        setUpdated(System.currentTimeMillis());
+        setCreatedAt(System.currentTimeMillis());
+        setUpdatedAt(System.currentTimeMillis());
     }
 
     public Set<Long> getReplyIds() {
-        return replies.stream().map(r -> r.getId()).collect(Collectors.toSet());
+        return replies.stream().map(Message::getId).collect(Collectors.toSet());
     }
 
     public Set<Message> getReplyTo() {
@@ -98,16 +99,16 @@ public class Message {
         return thread;
     }
 
-    public Long getTimestamp() {
-        return timestamp;
+    public Long getCreatedAt() {
+        return createdAt;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Long getUpdated() {
-        return updated;
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
     public void setAttachments(Set<Attachment> attachments) {
@@ -122,15 +123,15 @@ public class Message {
         this.thread = thread;
     }
 
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setUpdated(Long updated) {
-        this.updated = updated;
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

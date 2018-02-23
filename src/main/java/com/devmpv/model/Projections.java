@@ -1,6 +1,5 @@
 package com.devmpv.model;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Set;
@@ -18,7 +17,7 @@ public interface Projections {
 
         String getText();
 
-        long getTimestamp();
+        long getCreatedAt();
 
         String getTitle();
 

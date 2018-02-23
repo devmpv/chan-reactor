@@ -26,7 +26,7 @@ public class Thread extends Message {
     private Board board;
 
     public Thread() {
-	setTimestamp(System.currentTimeMillis());
+	setCreatedAt(System.currentTimeMillis());
     }
 
     public Thread(Board board, String title, String text) {

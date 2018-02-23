@@ -21,6 +21,6 @@ public interface AttachmentRepository extends CrudRepository<Attachment, Seriali
 
     Attachment findByMd5(String md5);
 
-    @Query("select a from Attachment a where a.messages.size=0")
+    @Query("select a from Attachment a where a.messages IS EMPTY")
     Set<Attachment> findEmpty();
 }
