@@ -15,13 +15,13 @@ import com.devmpv.repositories.MessageRepository
 import com.devmpv.repositories.ThreadRepository
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document.OutputSettings
-import org.jsoup.safety.Whitelist
+import org.jsoup.safety.Safelist
 import org.nibor.autolink.Autolink
 import org.nibor.autolink.LinkExtractor
 import org.nibor.autolink.LinkType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.hateoas.EntityLinks
+import org.springframework.hateoas.server.EntityLinks
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -62,13 +62,13 @@ constructor(private val threadRepo: ThreadRepository,
     private val threadMaxCount: Int = 0
 
     private fun getPath(message: Message): String {
-        return entityLinks.linkForSingleResource(message.javaClass, message.id).toUri().path
+        return entityLinks.linkToItemResource(message.javaClass, message.id!!).toUri().path
     }
 
     private fun notify(message: Message) {
         val headers = HashMap<String, Any>()
         headers.put("thread", message.thread!!.id!!)
-        template.convertAndSend(MESSAGE_PREFIX + "/newMessage", getPath(message), headers)
+        template.convertAndSend("$MESSAGE_PREFIX/newMessage", getPath(message), headers)
     }
 
     @PostConstruct
@@ -96,7 +96,7 @@ constructor(private val threadRepo: ThreadRepository,
     }
 
     private fun parseText(input: String): String {
-        var result = Jsoup.clean(input, "", Whitelist.basic(), textSettings)
+        var result = Jsoup.clean(input, "", Safelist.basic(), textSettings)
 
         val links = linkExtractor.extractLinks(result)
         result = Autolink.renderLinks(result, links) { link, text, sb ->
@@ -133,7 +133,7 @@ constructor(private val threadRepo: ThreadRepository,
     }
 
     private fun saveMessage(params: Map<String, Array<String>>, files: Map<String, MultipartFile>, text: String): Message {
-        val thread = threadRepo.findById(java.lang.Long.valueOf(params[THREAD]!![0])!!).get()
+        val thread = threadRepo.findById(java.lang.Long.valueOf(params[THREAD]!![0])).get()
         var message = Message(params[TITLE]!![0], parseText(text))
         message.thread = thread
         saveAttachments(message, files)

@@ -16,6 +16,4 @@ class Board(
 ) {
     @OneToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY, mappedBy = "board")
     var threads: MutableSet<Thread>? = null
-
-    constructor() : this("")
 }

@@ -82,7 +82,6 @@ constructor(@Value("\${chan.file.path}") filestorage: String, private val repo: 
                 LOG.error(String.format("Unable to create directory [%s]", path.toString()), e)
                 throw e
             }
-
         }
     }
 
